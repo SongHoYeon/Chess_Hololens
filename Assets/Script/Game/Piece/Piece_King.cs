@@ -6,6 +6,8 @@ public class Piece_King : Piece
 {
     public override void Init(BoardPoint point)
     {
+        base.Init(point);
+
         currentPoint = point;
         type = Enums.PieceType.King;
 

@@ -6,6 +6,8 @@ public class Piece_Sha : Piece
 {
     public override void Init(BoardPoint point)
     {
+        base.Init(point);
+
         currentPoint = point;
         type = Enums.PieceType.Sha;
 

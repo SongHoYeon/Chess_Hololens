@@ -15,8 +15,14 @@ public abstract class Piece : MonoBehaviour
 {
     protected BoardPoint currentPoint;
     protected Enums.PieceType type;
-
+    protected bool isAlive;
     protected PieceMovement pieceMovement;
 
-    public abstract void Init(BoardPoint point);
+    public virtual void Init(BoardPoint point)
+    {
+        isAlive = true;
+    }
+
+    public BoardPoint GetPoint() { return currentPoint; }
+    public bool GetIsAlive() { return isAlive; }
 }

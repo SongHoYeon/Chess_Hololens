@@ -8,7 +8,9 @@ public class BoardPoint : MonoBehaviour
     private LineRenderer lineRenderer;
 
     private int colIdx;
+    public int GetXPos() { return colIdx; }
     private int rowIdx;
+    public int GetYPos() { return rowIdx; }
 
     public void Init(int colIdx, int rowIdx)
     {
