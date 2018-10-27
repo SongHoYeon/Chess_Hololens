@@ -1,9 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using XInputDotNetPure;
 
-public class InputManager : MonoBehaviour 
+public class InputManager : MonoBehaviour
 {
+    bool playerIndexSet = false;
+    PlayerIndex playerIndex;
+    GamePadState state;
+    GamePadState prevState;
+    bool flag1 = false;
+    bool flag2 = false;
+
     [SerializeField]
     private GameManager gameManager;
     [SerializeField]
@@ -34,6 +42,7 @@ public class InputManager : MonoBehaviour
 
     public void TurnChange(Enums.Player to)
     {
+        Debug.Log("a");
         currentCursor.SetActive(false);
         if (to == Enums.Player.Player1)
             currentCursor = player1SelectCursor;
@@ -48,30 +57,58 @@ public class InputManager : MonoBehaviour
 
     void Update()
     {
+
+        if (!playerIndexSet || !prevState.IsConnected)
+        {
+            for (int i = 0; i < 4; ++i)
+            {
+                PlayerIndex testPlayerIndex = (PlayerIndex)i;
+                GamePadState testState = GamePad.GetState(testPlayerIndex);
+                if (testState.IsConnected)
+                {
+                    Debug.Log(string.Format("GamePad found {0}", testPlayerIndex));
+                    playerIndex = testPlayerIndex;
+                    playerIndexSet = true;
+                }
+            }
+        }
+
+        prevState = state;
+        state = GamePad.GetState(playerIndex);
+
+
         if (!GameManager.isGameStart)
             return;
 
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (state.ThumbSticks.Left.X > -1 && flag1)
+        { flag1 = false; }
+        if (state.ThumbSticks.Left.X < 1 && flag2)
+        { flag2 = false; }
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || state.ThumbSticks.Left.X <= -1 && !flag1)
         {
+            flag1 = true;
             currentTargetIdx--;
             if (currentTargetIdx < 0)
                 currentTargetIdx = GameManager.currentTurnPieceList.Count - 1;
         }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+
+        if (Input.GetKeyDown(KeyCode.RightArrow) || state.ThumbSticks.Left.X >= 1 && !flag2)
         {
+            flag2 = true;
             currentTargetIdx++;
             if (currentTargetIdx > GameManager.currentTurnPieceList.Count - 1)
                 currentTargetIdx = 0;
         }
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.A) || prevState.Buttons.A == ButtonState.Pressed && state.Buttons.A == ButtonState.Released)
         {
             BoardPoint currentPoint = GameManager.currentTurnPieceList[currentTargetIdx].GetPoint();
-            
+
             if (GameManager.currentTurnPlayer == Enums.Player.Player1)
             {
                 if (currentPoint.GetYPos() > 0)
                 {
-                    GameManager.currentTurnPieceList[currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos()-1], () => gameManager.TurnChange());
+                    GameManager.currentTurnPieceList[currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() - 1], () => gameManager.TurnChange());
                 }
             }
             else if (GameManager.currentTurnPlayer == Enums.Player.Player2)
@@ -114,7 +151,7 @@ public class InputManager : MonoBehaviour
             }
             if (currentTurnPiece.GetPieceMovement().isMoveOnlyInField)
             {
-                
+
             }
         }
         else if (GameManager.currentTurnPlayer == Enums.Player.Player2)
