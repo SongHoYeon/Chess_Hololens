@@ -12,15 +12,25 @@ public class BoardPoint : MonoBehaviour
     private int rowIdx;
     public int GetYPos() { return rowIdx; }
 
-    public void Init(int colIdx, int rowIdx)
+    private bool isFieldPoint = false;
+
+    public void Init(int colIdx, int rowIdx, bool drawLine = true)
     {
         this.colIdx = colIdx;
         this.rowIdx = rowIdx;
 
-        if (rowIdx == 0)
-            DrawColLine();
-        if (colIdx == 0)
-            DrawRowLine();
+        if (colIdx >= 3 && colIdx <= 5)
+        {
+            if (rowIdx == 0 || rowIdx == 1 || rowIdx == 2 || rowIdx == 7 || rowIdx == 8 || rowIdx == 9)
+                isFieldPoint = true;
+        }
+        if (drawLine)
+        {
+            if (rowIdx == 0)
+                DrawColLine();
+            if (colIdx == 0)
+                DrawRowLine();
+        }
     }
 
     private void DrawColLine()

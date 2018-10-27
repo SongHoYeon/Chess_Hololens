@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public struct PieceMovement
 {
@@ -18,11 +19,41 @@ public abstract class Piece : MonoBehaviour
     protected bool isAlive;
     protected PieceMovement pieceMovement;
 
+    private bool moveFlag;
+    private BoardPoint toMovePoint;
+    private float moveTimer;
+    private Action moveEndCallback;
+
     public virtual void Init(BoardPoint point)
     {
         isAlive = true;
     }
 
     public BoardPoint GetPoint() { return currentPoint; }
+    public PieceMovement GetPieceMovement() { return pieceMovement; }
     public bool GetIsAlive() { return isAlive; }
+
+    public void SetMove(BoardPoint to, Action moveEndCallback)
+    {
+        toMovePoint = to;
+        moveTimer = 0f;
+        moveFlag = true;
+        this.moveEndCallback = moveEndCallback;
+    }
+    private void Update()
+    {
+        if (moveFlag)
+        {
+            moveTimer += Time.deltaTime / 1f;
+            transform.position = Vector3.Lerp(transform.position, toMovePoint.transform.position, moveTimer);
+            transform.localPosition = new Vector3(transform.localPosition.x, 0f, transform.localPosition.z);
+            if (Mathf.Abs(transform.position.z - toMovePoint.transform.position.z) < 0.1f)
+            {
+                currentPoint = toMovePoint;
+                moveFlag = false;
+                if (moveEndCallback != null)
+                    moveEndCallback();
+            }
+        }
+    }
 }
