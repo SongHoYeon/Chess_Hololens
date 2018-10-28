@@ -105,7 +105,8 @@ public class CustomMessage : Singleton<CustomMessage>
         SharingStage.Instance.SharingManagerConnected -= Connected;
         InitializeMessageHandlers();
     }
-
+    bool logcheck = false;
+    bool idAllocCheck = false;
     private void InitializeMessageHandlers()
     {
         SharingStage sharingStage = SharingStage.Instance;
@@ -125,13 +126,12 @@ public class CustomMessage : Singleton<CustomMessage>
 
         connectionAdapter = new NetworkConnectionAdapter();
         connectionAdapter.MessageReceivedCallback += OnMessageReceived;
-
+        idAllocCheck = true;
         // Cache the local user ID
         LocalUserID = SharingStage.Instance.Manager.GetLocalUser().GetID();
-        //LocalPlayer = SharingStage.Instance.CurrentRoom.GetUserCount() == 1 ? Enums.Player.Player1 : Enums.Player.Player2;
+        LocalPlayer = SharingStage.Instance.CurrentRoom.GetUserCount() == 1 ? Enums.Player.Player1 : Enums.Player.Player2;
 
-        //WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nLocalUserId : %s", LocalUserID.ToString());
-        //WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nLocalPlayer : %s", LocalPlayer.ToString());
+        
         for (byte index = (byte)MessageType.MoveTarget; index < (byte)MessageType.Max; index++)
         {
             if (MessageHandlers.ContainsKey((MessageType)index) == false)
@@ -142,7 +142,18 @@ public class CustomMessage : Singleton<CustomMessage>
             serverConnection.AddListener(index, connectionAdapter);
         }
     }
-
+    private void Update()
+    {
+        if (!logcheck && idAllocCheck)
+        {
+            if (WorldAnchorManager.Instance != null && WorldAnchorManager.Instance.AnchorDebugText != null)
+            {
+                WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nLocalUserId : %s", LocalUserID.ToString());
+                WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nLocalPlayer : %s", LocalPlayer.ToString());
+                logcheck = true;
+            }
+        }
+    }
     private NetworkOutMessage CreateMessage(byte messageType)
     {
         NetworkOutMessage msg = serverConnection.CreateMessage(messageType);

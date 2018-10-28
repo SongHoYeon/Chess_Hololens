@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using XInputDotNetPure;
+using UnityEngine.Windows.Speech;
+using System.Linq;
 
 public class InputManager_S : MonoBehaviour
 {
@@ -29,6 +31,9 @@ public class InputManager_S : MonoBehaviour
     private GameObject currentCursor;
     private List<GameObject> moveDirectionViewerList;
 
+    KeywordRecognizer keywordRecognizer = null;
+    Dictionary<string, System.Action> keywords = new Dictionary<string, System.Action>();
+
     private void OnEnable()
     {
         moveDirectionViewerList = new List<GameObject>();
@@ -40,8 +45,38 @@ public class InputManager_S : MonoBehaviour
         currentCursor = player1SelectCursor;
 
         TurnChange(Enums.Player.Player1);
-    }
+        keywords.Add("Move", () =>
+        {
+            BoardPoint currentPoint = GameManager.currentTurnPieceList[currentTargetIdx].GetPoint();
 
+            if (GameManager.currentTurnPlayer == Enums.Player.Player1)
+            {
+                if (currentPoint.GetYPos() > 0)
+                {
+                    GameManager.currentTurnPieceList[currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() - 1], () => gameManager.TurnChange());
+                }
+            }
+            else if (GameManager.currentTurnPlayer == Enums.Player.Player2)
+            {
+                if (currentPoint.GetYPos() < 9)
+                {
+                    GameManager.currentTurnPieceList[currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() + 1], () => gameManager.TurnChange());
+                }
+            }
+        }
+      );
+        keywordRecognizer = new KeywordRecognizer(keywords.Keys.ToArray());
+        keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
+        keywordRecognizer.Start();
+    }
+    private void KeywordRecognizer_OnPhraseRecognized(PhraseRecognizedEventArgs args)
+    {
+        System.Action keywordAction;
+        if (keywords.TryGetValue(args.text, out keywordAction))
+        {
+            keywordAction.Invoke();
+        }
+    }
     public void TurnChange(Enums.Player to)
     {
         currentCursor.SetActive(false);

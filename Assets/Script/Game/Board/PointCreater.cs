@@ -48,7 +48,7 @@ public class PointCreater : MonoBehaviour
                 newPoint.name = "BoardPoint_[" + i.ToString() + ", " + j.ToString() + "]";
 
                 BoardPoint comp = newPoint.GetComponent<BoardPoint>();
-                comp.Init(j, i);
+                comp.Init(j, i, false);
 
                 pointTransformList[j, i] = newPoint.transform;
                 pointCompList[j, i] = comp;
