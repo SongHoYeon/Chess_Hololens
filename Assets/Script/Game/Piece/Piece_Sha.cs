@@ -25,7 +25,5 @@ public class Piece_Sha : Piece
             { 0,0,0,0,0,0,0},
             { 0,0,0,0,0,0,0},
         };
-
-        transform.localPosition = point.transform.localPosition;
     }
 }

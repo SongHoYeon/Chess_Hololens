@@ -52,6 +52,7 @@ namespace HoloToolkit.Sharing.Utilities
 
         private void Start()
         {
+#if !UNITY_EDITOR
             // SharingStage should be valid at this point, but we may not be connected.
             if (SharingStage.Instance.IsConnected)
             {
@@ -61,6 +62,7 @@ namespace HoloToolkit.Sharing.Utilities
             {
                 SessionTrackerDisconnected();
             }
+#endif
         }
 
         protected override void OnDestroy()

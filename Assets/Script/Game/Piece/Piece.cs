@@ -27,6 +27,9 @@ public abstract class Piece : MonoBehaviour
     public virtual void Init(BoardPoint point)
     {
         isAlive = true;
+        transform.localPosition = point.transform.localPosition;
+        transform.localPosition = new Vector3(transform.localPosition.x, -1f, transform.localPosition.z);
+        transform.localEulerAngles = new Vector3(-90f, 0f, 0f);
     }
 
     public BoardPoint GetPoint() { return currentPoint; }

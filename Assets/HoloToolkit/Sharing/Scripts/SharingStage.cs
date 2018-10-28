@@ -226,6 +226,9 @@ namespace HoloToolkit.Sharing
         {
             base.Awake();
 
+#if UNITY_EDITOR
+            gameObject.SetActive(false);
+#else
             AppInstanceUniqueId = Guid.NewGuid().ToString();
             logWriter = new ConsoleLogWriter { ShowDetailedLogs = ShowDetailedLogs };
 
@@ -237,6 +240,8 @@ namespace HoloToolkit.Sharing
             {
                 ManagerInit(connectOnAwake);
             }
+#endif
+
         }
 
         private void OnEnable()
@@ -317,9 +322,9 @@ namespace HoloToolkit.Sharing
             base.OnDestroy();
         }
 
-        #endregion // Unity Methods
+#endregion // Unity Methods
 
-        #region Event Callbacks
+#region Event Callbacks
 
         private void OnNetworkConnectionChanged(NetworkConnection networkConnection)
         {
@@ -386,7 +391,7 @@ namespace HoloToolkit.Sharing
             }
         }
 
-        #endregion // Event Callbacks
+#endregion // Event Callbacks
 
         private void ManagerInit(bool setConnection)
         {

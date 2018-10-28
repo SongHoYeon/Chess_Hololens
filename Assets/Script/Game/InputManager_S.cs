@@ -45,7 +45,7 @@ public class InputManager_S : MonoBehaviour
         currentCursor = player1SelectCursor;
 
         TurnChange(Enums.Player.Player1);
-        keywords.Add("Move", () =>
+        keywords.Add("Go", () =>
         {
             BoardPoint currentPoint = GameManager.currentTurnPieceList[currentTargetIdx].GetPoint();
 
