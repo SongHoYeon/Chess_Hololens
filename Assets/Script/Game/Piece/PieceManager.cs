@@ -25,14 +25,12 @@ public class PieceManager : MonoBehaviour
     public static Dictionary<Enums.PieceSetting, Piece> player1Pieces;
     public static Dictionary<Enums.PieceSetting, Piece> player2Pieces;
 
-    void Awake()
-    {
-        player1Pieces = new Dictionary<Enums.PieceSetting, Piece>();
-        player2Pieces = new Dictionary<Enums.PieceSetting, Piece>();
-    }
 
     public void CreatePiece()
     {
+        player1Pieces = new Dictionary<Enums.PieceSetting, Piece>();
+        player2Pieces = new Dictionary<Enums.PieceSetting, Piece>();
+
         GameObject obj = null;
 
         // 킹

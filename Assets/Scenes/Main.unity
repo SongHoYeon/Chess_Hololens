@@ -1223,7 +1223,6 @@ MonoBehaviour:
   rightTopPoint: {fileID: 1571723071}
   rightBottomPoint: {fileID: 1166522539}
   pointsParent: {fileID: 1814007969}
-  pieceManager: {fileID: 1954672228}
 --- !u!1 &1166522538
 GameObject:
   m_ObjectHideFlags: 0
@@ -2242,6 +2241,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputManager: {fileID: 2021978575}
+  pointCreater: {fileID: 1131790526}
+  pieceManager: {fileID: 1954672228}
 --- !u!1 &2072411096
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,16 +6,22 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private InputManager_S inputManager;
+    [SerializeField]
+    private PointCreater pointCreater;
+    [SerializeField]
+    private PieceManager pieceManager;
 
     public static Enums.Player currentTurnPlayer;
 
     public static List<Piece> currentTurnPieceList;
     public static bool isGameStart;
 
-    void Start()
+    void OnEnable()
     {
         currentTurnPieceList = new List<Piece>();
 
+        pointCreater.CreatePoints();
+        pieceManager.CreatePiece();
         TurnChange();
     }
 
@@ -61,7 +67,5 @@ public class GameManager : MonoBehaviour
                     currentTurnPieceList.Add(foundPiece[j]);
             }
         }
-
-        inputManager.TurnChange(currentTurnPlayer);
     }
 }

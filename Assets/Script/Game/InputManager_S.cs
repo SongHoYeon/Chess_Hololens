@@ -29,7 +29,7 @@ public class InputManager_S : MonoBehaviour
     private GameObject currentCursor;
     private List<GameObject> moveDirectionViewerList;
 
-    private void Start()
+    private void OnEnable()
     {
         moveDirectionViewerList = new List<GameObject>();
 
@@ -38,11 +38,12 @@ public class InputManager_S : MonoBehaviour
         player1SelectCursor.SetActive(false);
         player2SelectCursor.SetActive(false);
         currentCursor = player1SelectCursor;
+
+        TurnChange(Enums.Player.Player1);
     }
 
     public void TurnChange(Enums.Player to)
     {
-        Debug.Log("a");
         currentCursor.SetActive(false);
         if (to == Enums.Player.Player1)
             currentCursor = player1SelectCursor;
@@ -57,7 +58,6 @@ public class InputManager_S : MonoBehaviour
 
     void Update()
     {
-
         if (!playerIndexSet || !prevState.IsConnected)
         {
             for (int i = 0; i < 4; ++i)

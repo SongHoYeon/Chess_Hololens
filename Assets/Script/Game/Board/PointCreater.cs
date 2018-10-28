@@ -16,25 +16,18 @@ public class PointCreater : MonoBehaviour
     [SerializeField]
     private Transform pointsParent;
 
-    [SerializeField]
-    private PieceManager pieceManager;
-
     public static Transform[,] pointTransformList;
     public static BoardPoint[,] pointCompList;
 
     public static float colInterval;
     public static float rowInterval;
 
-    void Awake()
+    public void CreatePoints()
     {
-        pointTransformList = new Transform[Defines.BoardProperty.COL_COUNT,Defines.BoardProperty.ROW_COUNT];
+        pointTransformList = new Transform[Defines.BoardProperty.COL_COUNT, Defines.BoardProperty.ROW_COUNT];
         pointCompList = new BoardPoint[Defines.BoardProperty.COL_COUNT, Defines.BoardProperty.ROW_COUNT];
-    }
 
-    void Start()
-    {
         CreateVirtualPoints();
-        pieceManager.CreatePiece();
     }
 
     private void CreateVirtualPoints()
