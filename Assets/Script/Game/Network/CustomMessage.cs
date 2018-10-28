@@ -128,10 +128,10 @@ public class CustomMessage : Singleton<CustomMessage>
 
         // Cache the local user ID
         LocalUserID = SharingStage.Instance.Manager.GetLocalUser().GetID();
-        LocalPlayer = SharingStage.Instance.CurrentRoom.GetUserCount() == 1 ? Enums.Player.Player1 : Enums.Player.Player2;
+        //LocalPlayer = SharingStage.Instance.CurrentRoom.GetUserCount() == 1 ? Enums.Player.Player1 : Enums.Player.Player2;
 
-        WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nLocalUserId : %s", LocalUserID.ToString());
-        WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nLocalPlayer : %s", LocalPlayer.ToString());
+        //WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nLocalUserId : %s", LocalUserID.ToString());
+        //WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nLocalPlayer : %s", LocalPlayer.ToString());
         for (byte index = (byte)MessageType.MoveTarget; index < (byte)MessageType.Max; index++)
         {
             if (MessageHandlers.ContainsKey((MessageType)index) == false)
