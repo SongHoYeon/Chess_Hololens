@@ -126,10 +126,11 @@ public class CustomMessage : Singleton<CustomMessage>
 
         connectionAdapter = new NetworkConnectionAdapter();
         connectionAdapter.MessageReceivedCallback += OnMessageReceived;
-        
+
         // Cache the local user ID
         LocalUserID = SharingStage.Instance.Manager.GetLocalUser().GetID();
-        LocalPlayer = SharingStage.Instance.CurrentRoom.GetUserCount() == 1 ? Enums.Player.Player1 : Enums.Player.Player2;
+        //LocalPlayer = SharingStage.Instance.CurrentRoom.GetUserCount() == 1 ? Enums.Player.Player1 : Enums.Player.Player2;
+        //SharingStage.Instance.Manager.
         idAllocCheck = true;
 
         for (byte index = (byte)MessageType.MoveTarget; index < (byte)MessageType.Max; index++)
@@ -149,7 +150,7 @@ public class CustomMessage : Singleton<CustomMessage>
             if (WorldAnchorManager.Instance != null && WorldAnchorManager.Instance.AnchorDebugText != null)
             {
                 WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nLocalUserId : \"{0}\"", LocalUserID.ToString());
-                WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nLocalPlayer : \"{0}\"", LocalPlayer.ToString());
+                //WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nLocalPlayer : \"{0}\"", LocalPlayer.ToString());
                 logcheck = true;
             }
         }
