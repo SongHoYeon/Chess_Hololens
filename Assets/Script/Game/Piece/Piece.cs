@@ -21,14 +21,14 @@ public abstract class Piece : MonoBehaviour
 
     private bool moveFlag;
     private BoardPoint toMovePoint;
+    private Vector3 toMovePos;
     private float moveTimer;
     private Action moveEndCallback;
 
     public virtual void Init(BoardPoint point)
     {
         isAlive = true;
-        transform.localPosition = point.transform.localPosition;
-        transform.localPosition = new Vector3(transform.localPosition.x, -1f, transform.localPosition.z);
+        transform.localPosition = new Vector3(point.transform.localPosition.x, 0f, point.transform.localPosition.z);
         transform.localEulerAngles = new Vector3(-90f, 0f, 0f);
     }
 
@@ -39,6 +39,7 @@ public abstract class Piece : MonoBehaviour
     public void SetMove(BoardPoint to, Action moveEndCallback)
     {
         toMovePoint = to;
+        //toMovePos = new Vector3(toMovePoint.transform.position.x, )
         moveTimer = 0f;
         moveFlag = true;
         this.moveEndCallback = moveEndCallback;

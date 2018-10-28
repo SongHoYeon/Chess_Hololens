@@ -226,9 +226,6 @@ namespace HoloToolkit.Sharing
         {
             base.Awake();
 
-#if UNITY_EDITOR
-            gameObject.SetActive(false);
-#else
             AppInstanceUniqueId = Guid.NewGuid().ToString();
             logWriter = new ConsoleLogWriter { ShowDetailedLogs = ShowDetailedLogs };
 
@@ -240,8 +237,6 @@ namespace HoloToolkit.Sharing
             {
                 ManagerInit(connectOnAwake);
             }
-#endif
-
         }
 
         private void OnEnable()

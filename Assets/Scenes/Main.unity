@@ -338,7 +338,7 @@ MonoBehaviour:
   MouseXYRotationAxisControl: {fileID: 876729422}
   MouseXYTranslationAxisControl: {fileID: 563464348}
   MouseXZTranslationAxisControl: {fileID: 815251539}
-  KeyboardSupported: 1
+  KeyboardSupported: 0
   KeyboardXYRotationAxisControl: {fileID: 1858161089}
   KeyboardXZRotationAxisControl: {fileID: 1414017343}
   KeyboardXYTranslationAxisControl: {fileID: 1492725078}
@@ -2132,7 +2132,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1954672226}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.05, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 57471227}
