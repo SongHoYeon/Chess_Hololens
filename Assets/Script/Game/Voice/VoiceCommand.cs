@@ -19,11 +19,10 @@ public class VoiceCommand : MonoBehaviour
 
         keywords.Add("Play", () =>
         {
-
             if (!check)
             {
                 Newobject.SetActive(true);
-                Newobject.transform.position = Camera.main.transform.position + new Vector3(0, -3f, 13f);//Camera.main.transform.forward;
+                Newobject.transform.position = Camera.main.transform.position + new Vector3(0, -7f, 13f);//Camera.main.transform.forward;
                 Newobject.transform.localEulerAngles = new Vector3(-25f, 0f, 0f);
                 check = true;
             }

@@ -128,6 +128,7 @@ public class CustomMessage : Singleton<CustomMessage>
 
         // Cache the local user ID
         LocalUserID = SharingStage.Instance.Manager.GetLocalUser().GetID();
+        Debug.Log("! Current Join User Id : " + LocalUserID.ToString());
         LocalPlayer = SharingStage.Instance.CurrentRoom.GetUserCount() == 1 ? Enums.Player.Player1 : Enums.Player.Player2;
         Debug.Log("! Current Join Plyaer Name : " + LocalPlayer);
 
@@ -141,7 +142,11 @@ public class CustomMessage : Singleton<CustomMessage>
             serverConnection.AddListener(index, connectionAdapter);
         }
     }
-
+    private void OnGUI()
+    {
+        GUI.Label(new Rect(50, 50, 200, 50), LocalPlayer.ToString());
+        GUI.Label(new Rect(50, 100, 200, 50), LocalUserID.ToString());
+    }
     private NetworkOutMessage CreateMessage(byte messageType)
     {
         NetworkOutMessage msg = serverConnection.CreateMessage(messageType);

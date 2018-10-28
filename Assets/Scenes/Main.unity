@@ -444,6 +444,8 @@ GameObject:
   - component: {fileID: 204750493}
   - component: {fileID: 204750492}
   - component: {fileID: 204750491}
+  - component: {fileID: 204750499}
+  - component: {fileID: 204750498}
   m_Layer: 0
   m_Name: Network
   m_TagString: Untagged
@@ -548,6 +550,29 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &204750498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 204750490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 914e6d23013ba6a4593efd22c1192f67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  phanObj: {fileID: 2021978573}
+--- !u!114 &204750499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 204750490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 637b0fd903fec314db6da70f7caa2cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &275373114
 GameObject:
   m_ObjectHideFlags: 0
