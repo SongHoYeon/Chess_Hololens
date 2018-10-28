@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Piece_Sha : Piece
 {
-    public override void Init(BoardPoint point)
+    public override void Init(BoardPoint point, Enums.PieceSetting pieceSettingIdx)
     {
-        base.Init(point);
+        base.Init(point, pieceSettingIdx);
 
         currentPoint = point;
         type = Enums.PieceType.Sha;
