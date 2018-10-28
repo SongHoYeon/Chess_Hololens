@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager _instance = null;
+    public static GameManager instance
+    {
+        get {
+            if (_instance == null)
+                Debug.Log("GameManager Inst is NULL");
+            return _instance;
+        }
+    }
     [SerializeField]
     private InputManager_S inputManager;
     [SerializeField]
@@ -13,59 +22,53 @@ public class GameManager : MonoBehaviour
 
     public static Enums.Player currentTurnPlayer;
 
-    public static List<Piece> currentTurnPieceList;
     public static bool isGameStart;
 
     void OnEnable()
     {
-        currentTurnPieceList = new List<Piece>();
+        _instance = this;
 
         pointCreater.CreatePoints();
-        pieceManager.CreatePiece();
-        TurnChange();
+        pieceManager.CreateMyPiece();
+        isGameStart = false;
+
+#if UNITY_EDITOR
+        GameStart();
+#endif
     }
 
-    public void TurnChange()
+    public void GameStart()
     {
-        currentTurnPieceList.Clear();
+        isGameStart = true;
+        currentTurnPlayer = Enums.Player.Player1;
+        InputManager_S.instance.CheckMyTurn();
+    }
 
-        int minXPos = 0;
-
-        if (currentTurnPlayer == Enums.Player.Player2 || !isGameStart)
-        {
-            currentTurnPlayer = Enums.Player.Player1;
-            minXPos = Defines.BoardProperty.COL_COUNT;
-            List<Piece> tmpList = new List<Piece>();
-
-            foreach (Piece piece in PieceManager.player1Pieces.Values)
-                tmpList.Add(piece);
-
-            for (int i = 0; i < Defines.BoardProperty.COL_COUNT; i++)
-            {
-                List<Piece> foundPiece = tmpList.FindAll(x => x.GetPoint().GetXPos() == i && x.GetIsAlive());
-                for (int j = 0; j < foundPiece.Count; j++)
-                    currentTurnPieceList.Add(foundPiece[j]);
-            }
-            
-            isGameStart = true;
-        }
-
-        else if (currentTurnPlayer == Enums.Player.Player1)
-        {
+    public void TurnChange(int from)
+    {
+        if (from == (int)Enums.Player.Player1)
             currentTurnPlayer = Enums.Player.Player2;
+        else
+            currentTurnPlayer = Enums.Player.Player1;
 
-            minXPos = Defines.BoardProperty.COL_COUNT;
-            List<Piece> tmpList = new List<Piece>();
+        InputManager_S.instance.CheckMyTurn();
 
-            foreach (Piece piece in PieceManager.player2Pieces.Values)
-                tmpList.Add(piece);
+        //else if (currentTurnPlayer == Enums.Player.Player1)
+        //{
+        //    currentTurnPlayer = Enums.Player.Player2;
 
-            for (int i = minXPos - 1; i >= 0; i--)
-            {
-                List<Piece> foundPiece = tmpList.FindAll(x => x.GetPoint().GetXPos() == i && x.GetIsAlive());
-                for (int j = 0; j < foundPiece.Count; j++)
-                    currentTurnPieceList.Add(foundPiece[j]);
-            }
-        }
+        //    minXPos = Defines.BoardProperty.COL_COUNT;
+        //    List<Piece> tmpList = new List<Piece>();
+
+        //    foreach (Piece piece in PieceManager.yourPieces.Values)
+        //        tmpList.Add(piece);
+
+        //    for (int i = minXPos - 1; i >= 0; i--)
+        //    {
+        //        List<Piece> foundPiece = tmpList.FindAll(x => x.GetPoint().GetXPos() == i && x.GetIsAlive());
+        //        for (int j = 0; j < foundPiece.Count; j++)
+        //            currentTurnPieceList.Add(foundPiece[j]);
+        //    }
+        //}
     }
 }

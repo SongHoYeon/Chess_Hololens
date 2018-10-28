@@ -25,8 +25,8 @@ public class VoiceCommand : MonoBehaviour
                 Newobject.transform.position = Camera.main.transform.position + (Camera.main.transform.forward+ new Vector3(0, -5f, 18f));//Camera.main.transform.forward;
                 Newobject.transform.localEulerAngles = new Vector3(-25f, 0f, 0f);
                 check = true;
+                CustomMessage.Instance.SendCreatePhan(Newobject.transform.position);
             }
-            CustomMessage.Instance.SendCreatePhan(Newobject.transform.position);
         }
       );
 

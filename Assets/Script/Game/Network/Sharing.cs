@@ -8,6 +8,9 @@ public class Sharing : MonoBehaviour
 {
     [SerializeField]
     private GameObject phanObj;
+    [SerializeField]
+    private PieceManager pieceManager;
+
     void Start()
     {
         //pc에서 돌아갈때 (spectatorView일때)
@@ -19,6 +22,8 @@ public class Sharing : MonoBehaviour
 
         CustomMessage.Instance.MessageHandlers[CustomMessage.MessageType.MoveTarget] = this.receiveMoveTarget;
         CustomMessage.Instance.MessageHandlers[CustomMessage.MessageType.CreatePhan] = this.receiveCreatePhan;
+        CustomMessage.Instance.MessageHandlers[CustomMessage.MessageType.CreateMyPiece] = this.receiveCreateMyPiece;
+        CustomMessage.Instance.MessageHandlers[CustomMessage.MessageType.TurnChange] = this.receiveTurnChange;
         //CustomMessage.Instance.MessageHandlers[CustomMessage.MessageType.CallDino] = this.receiveCallDino;
         //CustomMessage.Instance.MessageHandlers[CustomMessage.MessageType.helpButton] = this.receiveHelpButton;
         //CustomMessage.Instance.MessageHandlers[CustomMessage.MessageType.returnButton] = this.receiveReturnButton;
@@ -49,16 +54,32 @@ public class Sharing : MonoBehaviour
 
         Vector3 p = CustomMessage.Instance.ReadVector3(msg);
 
-        //Vector3 wallP = HoloDinosaurCustomMessages.Instance.ReadVector3(msg) + calibP;
+        CustomMessage.Instance.LocalPlayer = Enums.Player.Player2;
+        CustomMessage.Instance.idAllocCheck = true;
 
         phanObj.SetActive(true);
         phanObj.transform.position = p;
-        phanObj.transform.localEulerAngles = new Vector3(25f, -180f, 0f);
+        phanObj.transform.localEulerAngles = new Vector3(-25f, 0f, 0f);
 
         //if (TrexControll.Instance != null)
         //{
         //    TrexControll.Instance.DinoTransformWithWall(p, r, wallP);
         //}
+    }
+
+    private void receiveCreateMyPiece(NetworkInMessage msg)
+    {
+        long id = msg.ReadInt64();
+
+        pieceManager.CreateYourPiece();
+    }
+
+    private void receiveTurnChange(NetworkInMessage msg)
+    {
+        long id = msg.ReadInt64();
+
+        int fromIdx = CustomMessage.Instance.ReadInt(msg);
+        GameManager.instance.TurnChange(fromIdx);
     }
     /*
     private void receiveCallDino(NetworkInMessage msg)

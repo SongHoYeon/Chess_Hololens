@@ -10,6 +10,8 @@ public class CustomMessage : Singleton<CustomMessage>
     {
         MoveTarget = MessageID.UserMessageIDStart,
         CreatePhan,
+        CreateMyPiece,
+        TurnChange,
         Max
     }
 
@@ -50,6 +52,8 @@ public class CustomMessage : Singleton<CustomMessage>
     /// Cache the connection object for the sharing service
     /// </summary>
     private NetworkConnection serverConnection;
+    private bool logcheck = false;
+    public bool idAllocCheck = false;
 
     public void SendMoveTarget(Vector3 position, Quaternion rotation)
     {
@@ -78,6 +82,41 @@ public class CustomMessage : Singleton<CustomMessage>
             NetworkOutMessage msg = CreateMessage((byte)MessageType.CreatePhan);
 
             AppendVector3(msg, position);
+            LocalPlayer = Enums.Player.Player1;
+            idAllocCheck = true;
+
+            // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.
+            serverConnection.Broadcast(
+                msg,
+                MessagePriority.Immediate,
+                MessageReliability.ReliableSequenced,
+                MessageChannel.Avatar);
+        }
+    }
+
+    public void SendCreateMyPiece()
+    {
+        // If we are connected to a session, broadcast our head info
+        if (serverConnection != null && serverConnection.IsConnected())
+        {
+            // Create an outgoing network message to contain all the info we want to send
+            NetworkOutMessage msg = CreateMessage((byte)MessageType.CreateMyPiece);
+
+            // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.
+            serverConnection.Broadcast(
+                msg,
+                MessagePriority.Immediate,
+                MessageReliability.ReliableSequenced,
+                MessageChannel.Avatar);
+        }
+    }
+    public void SendTurnChange(int fromIdx)
+    {
+        // If we are connected to a session, broadcast our head info
+        if (serverConnection != null && serverConnection.IsConnected())
+        {
+            // Create an outgoing network message to contain all the info we want to send
+            NetworkOutMessage msg = CreateMessage((byte)MessageType.TurnChange);
 
             // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.
             serverConnection.Broadcast(
@@ -105,8 +144,7 @@ public class CustomMessage : Singleton<CustomMessage>
         SharingStage.Instance.SharingManagerConnected -= Connected;
         InitializeMessageHandlers();
     }
-    bool logcheck = false;
-    bool idAllocCheck = false;
+    
     private void InitializeMessageHandlers()
     {
         SharingStage sharingStage = SharingStage.Instance;
@@ -129,9 +167,7 @@ public class CustomMessage : Singleton<CustomMessage>
 
         // Cache the local user ID
         LocalUserID = SharingStage.Instance.Manager.GetLocalUser().GetID();
-        //LocalPlayer = SharingStage.Instance.CurrentRoom.GetUserCount() == 1 ? Enums.Player.Player1 : Enums.Player.Player2;
-        //SharingStage.Instance.Manager.
-        idAllocCheck = true;
+        
 
         for (byte index = (byte)MessageType.MoveTarget; index < (byte)MessageType.Max; index++)
         {
@@ -149,8 +185,7 @@ public class CustomMessage : Singleton<CustomMessage>
         {
             if (WorldAnchorManager.Instance != null && WorldAnchorManager.Instance.AnchorDebugText != null)
             {
-                WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nLocalUserId : \"{0}\"", LocalUserID.ToString());
-                //WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nLocalPlayer : \"{0}\"", LocalPlayer.ToString());
+                WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nLocalPlayer : \"{0}\"", LocalPlayer.ToString());
                 logcheck = true;
             }
         }

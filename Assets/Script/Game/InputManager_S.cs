@@ -7,6 +7,17 @@ using System.Linq;
 
 public class InputManager_S : MonoBehaviour
 {
+    public static InputManager_S _instance = null;
+    public static InputManager_S instance
+    {
+        get
+        {
+            if (_instance == null)
+                Debug.Log("InputManager Inst is NULL");
+            return _instance;
+        }
+    }
+
     bool playerIndexSet = false;
     PlayerIndex playerIndex;
     GamePadState state;
@@ -25,74 +36,65 @@ public class InputManager_S : MonoBehaviour
     private GameObject moveDirectionViewerObj;
 
     private Enums.Player player;
-    private int currentTargetIdx;
-    private GameObject player1SelectCursor;
-    private GameObject player2SelectCursor;
+    public int currentTargetIdx;
+    private GameObject mySelectCursor;
+    private GameObject yourSelectCursor;
     private GameObject currentCursor;
     private List<GameObject> moveDirectionViewerList;
+
+    public List<Piece> currentTurnPieceList;
+    private bool isMyTurn;
 
     KeywordRecognizer keywordRecognizer = null;
     Dictionary<string, System.Action> keywords = new Dictionary<string, System.Action>();
 
     private void OnEnable()
     {
+        _instance = this;
+
+        currentTurnPieceList = new List<Piece>();
         moveDirectionViewerList = new List<GameObject>();
 
-        player1SelectCursor = GameObject.Instantiate(player1SelectCursorObj);
-        player2SelectCursor = GameObject.Instantiate(player2SelectCursorObj);
-        player1SelectCursor.SetActive(false);
-        player2SelectCursor.SetActive(false);
-        currentCursor = player1SelectCursor;
-
-        TurnChange(Enums.Player.Player1);
-        keywords.Add("Go", () =>
-        {
-            BoardPoint currentPoint = GameManager.currentTurnPieceList[currentTargetIdx].GetPoint();
-
-            if (GameManager.currentTurnPlayer == Enums.Player.Player1)
-            {
-                if (currentPoint.GetYPos() > 0)
-                {
-                    GameManager.currentTurnPieceList[currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() - 1], () => gameManager.TurnChange());
-                }
-            }
-            else if (GameManager.currentTurnPlayer == Enums.Player.Player2)
-            {
-                if (currentPoint.GetYPos() < 9)
-                {
-                    GameManager.currentTurnPieceList[currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() + 1], () => gameManager.TurnChange());
-                }
-            }
-        }
-      );
-        keywordRecognizer = new KeywordRecognizer(keywords.Keys.ToArray());
-        keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
-        keywordRecognizer.Start();
+        isMyTurn = false;
+        mySelectCursor = GameObject.Instantiate(player1SelectCursorObj);
+        yourSelectCursor = GameObject.Instantiate(player2SelectCursorObj);
+        mySelectCursor.SetActive(false);
+        yourSelectCursor.SetActive(false);
+        currentCursor = mySelectCursor;
     }
-    private void KeywordRecognizer_OnPhraseRecognized(PhraseRecognizedEventArgs args)
-    {
-        System.Action keywordAction;
-        if (keywords.TryGetValue(args.text, out keywordAction))
-        {
-            keywordAction.Invoke();
-        }
-    }
-    public void TurnChange(Enums.Player to)
+
+    public void CheckMyTurn()
     {
         currentCursor.SetActive(false);
-        if (to == Enums.Player.Player1)
-            currentCursor = player1SelectCursor;
-        else if (to == Enums.Player.Player2)
-            currentCursor = player2SelectCursor;
-        currentCursor.SetActive(true);
+        if (GameManager.currentTurnPlayer == CustomMessage.Instance.LocalPlayer)
+        {
+            isMyTurn = true;
 
-        currentTargetIdx = 0;
+            currentTargetIdx = 0;
+            currentCursor = mySelectCursor;
+            currentCursor.SetActive(true);
 
-        TargettingEffect();
+            currentTurnPieceList.Clear();
+
+            List<Piece> tmpList = new List<Piece>();
+
+            foreach (Piece piece in PieceManager.myPieces.Values)
+                tmpList.Add(piece);
+
+            for (int i = 0; i < Defines.BoardProperty.COL_COUNT; i++)
+            {
+                List<Piece> foundPiece = tmpList.FindAll(x => x.GetPoint().GetXPos() == i && x.GetIsAlive());
+                for (int j = 0; j < foundPiece.Count; j++)
+                    currentTurnPieceList.Add(foundPiece[j]);
+            }
+        }
+        else
+            isMyTurn = false;
     }
 
     void Update()
     {
+        #region Controller Setting
         if (!playerIndexSet || !prevState.IsConnected)
         {
             for (int i = 0; i < 4; ++i)
@@ -111,59 +113,63 @@ public class InputManager_S : MonoBehaviour
         prevState = state;
         state = GamePad.GetState(playerIndex);
 
-
-        if (!GameManager.isGameStart)
-            return;
-
         if (state.ThumbSticks.Left.X > -1 && flag1)
         { flag1 = false; }
         if (state.ThumbSticks.Left.X < 1 && flag2)
         { flag2 = false; }
+
+        #endregion
+
+        if (!GameManager.isGameStart)
+            return;
+        if (!isMyTurn)
+            return;
 
         if (Input.GetKeyDown(KeyCode.LeftArrow) || state.ThumbSticks.Left.X <= -1 && !flag1)
         {
             flag1 = true;
             currentTargetIdx--;
             if (currentTargetIdx < 0)
-                currentTargetIdx = GameManager.currentTurnPieceList.Count - 1;
+                currentTargetIdx = currentTurnPieceList.Count - 1;
         }
 
         if (Input.GetKeyDown(KeyCode.RightArrow) || state.ThumbSticks.Left.X >= 1 && !flag2)
         {
             flag2 = true;
             currentTargetIdx++;
-            if (currentTargetIdx > GameManager.currentTurnPieceList.Count - 1)
+            if (currentTargetIdx > currentTurnPieceList.Count - 1)
                 currentTargetIdx = 0;
         }
         if (Input.GetKeyDown(KeyCode.A) || prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed)
         {
-            BoardPoint currentPoint = GameManager.currentTurnPieceList[currentTargetIdx].GetPoint();
+            BoardPoint currentPoint = currentTurnPieceList[currentTargetIdx].GetPoint();
 
-            if (GameManager.currentTurnPlayer == Enums.Player.Player1)
+            if (currentPoint.GetYPos() > 0)
             {
-                if (currentPoint.GetYPos() > 0)
+                currentTurnPieceList[currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() - 1], () =>
                 {
-                    GameManager.currentTurnPieceList[currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() - 1], () => gameManager.TurnChange());
-                }
+                    CustomMessage.Instance.SendTurnChange((int)CustomMessage.Instance.LocalPlayer);
+                });
             }
-            else if (GameManager.currentTurnPlayer == Enums.Player.Player2)
-            {
-                if (currentPoint.GetYPos() < 9)
-                {
-                    GameManager.currentTurnPieceList[currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() + 1], () => gameManager.TurnChange());
-                }
-            }
+
+            //else if (currentTurnPlayer == Enums.Player.Player2)
+            //{
+            //    if (currentPoint.GetYPos() < 9)
+            //    {
+            //        currentTurnPieceList[currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() + 1], () => gameManager.TurnChange());
+            //    }
+            //}
         }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            gameManager.TurnChange();
-        }
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    gameManager.TurnChange();
+        //}
         TargettingEffect();
     }
 
     private void TargettingEffect()
     {
-        currentCursor.transform.parent = GameManager.currentTurnPieceList[currentTargetIdx].transform;
+        currentCursor.transform.parent = currentTurnPieceList[currentTargetIdx].transform;
         currentCursor.transform.localPosition = Vector3.zero;
 
         //ShowMoveDirection();
@@ -171,27 +177,27 @@ public class InputManager_S : MonoBehaviour
 
     private void ShowMoveDirection()
     {
-        Piece currentTurnPiece = GameManager.currentTurnPieceList[currentTargetIdx];
-        if (GameManager.currentTurnPlayer == Enums.Player.Player1)
-        {
-            for (int i = 0; i < 7; i++)
-            {
-                for (int j = 0; j < 7; j++)
-                {
-                    if (currentTurnPiece.GetPieceMovement().moveDirection[i, j] == 2)
-                    {
+        //Piece currentTurnPiece = GameManager.currentTurnPieceList[currentTargetIdx];
+        //if (GameManager.currentTurnPlayer == Enums.Player.Player1)
+        //{
+        //    for (int i = 0; i < 7; i++)
+        //    {
+        //        for (int j = 0; j < 7; j++)
+        //        {
+        //            if (currentTurnPiece.GetPieceMovement().moveDirection[i, j] == 2)
+        //            {
 
-                    }
-                }
-            }
-            if (currentTurnPiece.GetPieceMovement().isMoveOnlyInField)
-            {
+        //            }
+        //        }
+        //    }
+        //    if (currentTurnPiece.GetPieceMovement().isMoveOnlyInField)
+        //    {
 
-            }
-        }
-        else if (GameManager.currentTurnPlayer == Enums.Player.Player2)
-        {
+        //    }
+        //}
+        //else if (GameManager.currentTurnPlayer == Enums.Player.Player2)
+        //{
 
-        }
+        //}
     }
 }
