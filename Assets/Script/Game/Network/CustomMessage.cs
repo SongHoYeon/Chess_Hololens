@@ -25,6 +25,10 @@ public class CustomMessage : Singleton<CustomMessage>
     {
         get; set;
     }
+    public Enums.Player LocalPlayer
+    {
+        get;set;
+    }
 
     public delegate void MessageCallback(NetworkInMessage msg);
     private Dictionary<MessageType, MessageCallback> messageHandlers = new Dictionary<MessageType, MessageCallback>();
@@ -65,7 +69,7 @@ public class CustomMessage : Singleton<CustomMessage>
                 MessageChannel.Avatar);
         }
     }
-    public void SendCreatePhan(Vector3 position, Quaternion rotation)
+    public void SendCreatePhan(Vector3 position)
     {
         // If we are connected to a session, broadcast our head info
         if (serverConnection != null && serverConnection.IsConnected())
@@ -73,7 +77,7 @@ public class CustomMessage : Singleton<CustomMessage>
             // Create an outgoing network message to contain all the info we want to send
             NetworkOutMessage msg = CreateMessage((byte)MessageType.CreatePhan);
 
-            AppendTransform(msg, position, rotation);
+            AppendVector3(msg, position);
 
             // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.
             serverConnection.Broadcast(
@@ -124,6 +128,8 @@ public class CustomMessage : Singleton<CustomMessage>
 
         // Cache the local user ID
         LocalUserID = SharingStage.Instance.Manager.GetLocalUser().GetID();
+        LocalPlayer = SharingStage.Instance.CurrentRoom.GetUserCount() == 1 ? Enums.Player.Player1 : Enums.Player.Player2;
+        Debug.Log("! Current Join Plyaer Name : " + LocalPlayer);
 
         for (byte index = (byte)MessageType.MoveTarget; index < (byte)MessageType.Max; index++)
         {

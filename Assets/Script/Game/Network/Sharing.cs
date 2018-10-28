@@ -48,13 +48,12 @@ public class Sharing : MonoBehaviour
         long id = msg.ReadInt64();
 
         Vector3 p = CustomMessage.Instance.ReadVector3(msg);
-        Quaternion r = CustomMessage.Instance.ReadQuaternion(msg);
 
         //Vector3 wallP = HoloDinosaurCustomMessages.Instance.ReadVector3(msg) + calibP;
 
         phanObj.SetActive(true);
         phanObj.transform.position = p;
-        phanObj.transform.rotation = r;
+        phanObj.transform.localEulerAngles = new Vector3(25f, -180f, 0f);
 
         //if (TrexControll.Instance != null)
         //{
