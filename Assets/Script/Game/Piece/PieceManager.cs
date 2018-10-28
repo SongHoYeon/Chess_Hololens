@@ -39,7 +39,6 @@ public class PieceManager : MonoBehaviour
     public static Dictionary<Enums.PieceSetting, Piece> myPieces;
     public static Dictionary<Enums.PieceSetting, Piece> yourPieces;
 
-
     public void CreateMyPiece()
     {
         myPieces = new Dictionary<Enums.PieceSetting, Piece>();

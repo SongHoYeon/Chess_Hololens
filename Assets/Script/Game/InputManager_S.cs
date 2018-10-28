@@ -146,31 +146,21 @@ public class InputManager_S : MonoBehaviour
 
             if (currentPoint.GetYPos() > 0)
             {
+                CustomMessage.Instance.SendMoveTarget((int)CustomMessage.Instance.LocalPlayer, (int)currentTurnPieceList[currentTargetIdx].GetPieceSettingIdx(), currentPoint.GetYPos() - 1, currentPoint.GetXPos());
                 currentTurnPieceList[currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() - 1], () =>
                 {
                     CustomMessage.Instance.SendTurnChange((int)CustomMessage.Instance.LocalPlayer);
                 });
             }
-
-            //else if (currentTurnPlayer == Enums.Player.Player2)
-            //{
-            //    if (currentPoint.GetYPos() < 9)
-            //    {
-            //        currentTurnPieceList[currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() + 1], () => gameManager.TurnChange());
-            //    }
-            //}
         }
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    gameManager.TurnChange();
-        //}
+
         TargettingEffect();
     }
 
     private void TargettingEffect()
     {
         currentCursor.transform.parent = currentTurnPieceList[currentTargetIdx].transform;
-        currentCursor.transform.localPosition = Vector3.zero;
+        currentCursor.transform.localPosition = new Vector3(0f, 1f, 0f);
 
         //ShowMoveDirection();
     }

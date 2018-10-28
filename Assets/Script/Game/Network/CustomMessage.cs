@@ -55,7 +55,7 @@ public class CustomMessage : Singleton<CustomMessage>
     private bool logcheck = false;
     public bool idAllocCheck = false;
 
-    public void SendMoveTarget(Vector3 position, Quaternion rotation)
+    public void SendMoveTarget(int from, int pieceIdx, int row, int col)
     {
         // If we are connected to a session, broadcast our head info
         if (serverConnection != null && serverConnection.IsConnected())
@@ -63,7 +63,10 @@ public class CustomMessage : Singleton<CustomMessage>
             // Create an outgoing network message to contain all the info we want to send
             NetworkOutMessage msg = CreateMessage((byte)MessageType.MoveTarget);
 
-            AppendTransform(msg, position, rotation);
+            msg.Write(from);
+            msg.Write(pieceIdx);
+            msg.Write(row);
+            msg.Write(col);
 
             // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.
             serverConnection.Broadcast(

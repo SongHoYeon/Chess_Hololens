@@ -36,17 +36,15 @@ public class Sharing : MonoBehaviour
 
     private void receiveMoveTarget(NetworkInMessage msg)
     {
-        //long id = msg.ReadInt64();
+        long id = msg.ReadInt64();
 
-        //Vector3 p = HoloDinosaurCustomMessages.Instance.ReadVector3(msg) + calibP;
-        //Quaternion r = HoloDinosaurCustomMessages.Instance.ReadQuaternion(msg);
+        int from = CustomMessage.Instance.ReadInt(msg);
+        int pieceIdx = CustomMessage.Instance.ReadInt(msg);
+        int row = CustomMessage.Instance.ReadInt(msg);
+        int col = CustomMessage.Instance.ReadInt(msg);
 
-        //Vector3 wallP = HoloDinosaurCustomMessages.Instance.ReadVector3(msg) + calibP;
+        PieceManager.yourPieces[(Enums.PieceSetting)pieceIdx].SetMove(PointCreater.pointCompList[(Defines.BoardProperty.COL_COUNT - 1) - col, (Defines.BoardProperty.ROW_COUNT - 1) - row], () => { CustomMessage.Instance.SendTurnChange((int)CustomMessage.Instance.LocalPlayer); });
 
-        //if (TrexControll.Instance != null)
-        //{
-        //    TrexControll.Instance.DinoTransformWithWall(p, r, wallP);
-        //}
     }
     private void receiveCreatePhan(NetworkInMessage msg)
     {

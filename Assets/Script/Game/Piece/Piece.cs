@@ -16,6 +16,7 @@ public abstract class Piece : MonoBehaviour
 {
     protected BoardPoint currentPoint;
     protected Enums.PieceType type;
+    protected Enums.PieceSetting settingIdx;
     protected bool isAlive;
     protected PieceMovement pieceMovement;
 
@@ -25,15 +26,17 @@ public abstract class Piece : MonoBehaviour
     private float moveTimer;
     private Action moveEndCallback;
 
-    public virtual void Init(BoardPoint point)
+    public virtual void Init(BoardPoint point, Enums.PieceSetting pieceSettingIdx)
     {
         isAlive = true;
+        this.settingIdx = pieceSettingIdx;
         transform.localPosition = new Vector3(point.transform.localPosition.x, 0f, point.transform.localPosition.z);
-        transform.localEulerAngles = new Vector3(-90f, 0f, 0f);
+        transform.localEulerAngles = new Vector3(-90f, 90f, 0f);
     }
 
     public BoardPoint GetPoint() { return currentPoint; }
     public PieceMovement GetPieceMovement() { return pieceMovement; }
+    public Enums.PieceSetting GetPieceSettingIdx() { return settingIdx; }
     public bool GetIsAlive() { return isAlive; }
 
     public void SetMove(BoardPoint to, Action moveEndCallback)
