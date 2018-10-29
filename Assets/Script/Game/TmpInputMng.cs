@@ -5,11 +5,11 @@ using HoloToolkit.Unity.InputModule;
 
 public class TmpInputMng : MonoBehaviour, IInputClickHandler
 {
-
     Rigidbody rb;
     public int cubeIdx;
     
-    void Start () {
+    void Start ()
+    {
         rb = this.gameObject.GetComponent<Rigidbody>();
     }
 

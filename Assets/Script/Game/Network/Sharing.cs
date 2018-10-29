@@ -3,6 +3,7 @@ using SpectatorView;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HoloToolkit.Unity;
 
 public class Sharing : MonoBehaviour
 {
@@ -68,7 +69,7 @@ public class Sharing : MonoBehaviour
     private void receiveCreateMyPiece(NetworkInMessage msg)
     {
         long id = msg.ReadInt64();
-
+        WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nSharing ReceiveMyPiece");
         pieceManager.CreateYourPiece();
     }
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HoloToolkit.Unity;
 
 public class GameManager : MonoBehaviour
 {
@@ -28,17 +29,15 @@ public class GameManager : MonoBehaviour
     {
         _instance = this;
 
+        WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nGameManager Enable");
         pointCreater.CreatePoints();
         pieceManager.CreateMyPiece();
         isGameStart = false;
-
-#if UNITY_EDITOR
-        GameStart();
-#endif
     }
 
     public void GameStart()
     {
+        WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nGameManager GameStart");
         isGameStart = true;
         currentTurnPlayer = Enums.Player.Player1;
         InputManager_S.instance.CheckMyTurn();

@@ -36,14 +36,16 @@ public class InputManager_S : MonoBehaviour
     private GameObject moveDirectionViewerObj;
 
     private Enums.Player player;
-    public int currentTargetIdx;
     private GameObject mySelectCursor;
     private GameObject yourSelectCursor;
     private GameObject currentCursor;
     private List<GameObject> moveDirectionViewerList;
-
-    public List<Piece> currentTurnPieceList;
     private bool isMyTurn;
+
+    [HideInInspector]
+    public List<Piece> currentTurnPieceList;
+    [HideInInspector]
+    public int currentTargetIdx;
 
     KeywordRecognizer keywordRecognizer = null;
     Dictionary<string, System.Action> keywords = new Dictionary<string, System.Action>();
@@ -87,6 +89,7 @@ public class InputManager_S : MonoBehaviour
                 for (int j = 0; j < foundPiece.Count; j++)
                     currentTurnPieceList.Add(foundPiece[j]);
             }
+            TargettingEffect();
         }
         else
             isMyTurn = false;

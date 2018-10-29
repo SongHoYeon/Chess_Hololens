@@ -512,7 +512,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AnchorDebugText: {fileID: 1735190349}
-  ShowDetailedLogs: 1
+  ShowDetailedLogs: 0
   PersistentAnchors: 0
 --- !u!114 &204750496
 MonoBehaviour:
@@ -526,7 +526,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ClientRole: 0
-  ServerAddress: 192.168.0.53
+  ServerAddress: 10.7.8.204
   defaultSessionName: DefaultSession
   defaultRoomName: DefaultRoom
   KeepRoomAlive: 0
@@ -1052,9 +1052,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 744108777}
-  m_LocalRotation: {x: -0.21643952, y: 0, z: -0, w: 0.97629607}
-  m_LocalPosition: {x: -6.4049997, y: -0.52164173, z: 17.997093}
-  m_LocalScale: {x: 2.1, y: 2.1, z: 2.1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.39, y: -0.34, z: 2.01}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
@@ -1311,9 +1311,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 966857214}
-  m_LocalRotation: {x: -0.21643952, y: 0, z: -0, w: 0.97629607}
-  m_LocalPosition: {x: -4.41, y: 3.09, z: 17.997093}
-  m_LocalScale: {x: 2.1, y: 2.1, z: 2.1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.03, y: 0.20164172, z: 2.01}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 8
@@ -2498,9 +2498,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2017140433}
-  m_LocalRotation: {x: -0.21643952, y: 0, z: -0, w: 0.97629607}
-  m_LocalPosition: {x: -7.86, y: 3.09, z: 17.997093}
-  m_LocalScale: {x: 2.1, y: 2.1, z: 2.1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.67, y: 0.20164168, z: 2.01}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
@@ -2554,8 +2554,8 @@ MonoBehaviour:
     type: 2}
   moveDirectionViewerObj: {fileID: 100000, guid: fedf8d6bc74562d43baae60cfbd3a340,
     type: 2}
-  currentTargetIdx: 0
   currentTurnPieceList: []
+  currentTargetIdx: 0
 --- !u!114 &2021978576
 MonoBehaviour:
   m_ObjectHideFlags: 0
