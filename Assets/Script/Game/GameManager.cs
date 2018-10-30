@@ -52,23 +52,5 @@ public class GameManager : MonoBehaviour
         WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nGameManager-Changing");
 
         InputManager_S.instance.CheckMyTurn();
-
-        //else if (currentTurnPlayer == Enums.Player.Player1)
-        //{
-        //    currentTurnPlayer = Enums.Player.Player2;
-
-        //    minXPos = Defines.BoardProperty.COL_COUNT;
-        //    List<Piece> tmpList = new List<Piece>();
-
-        //    foreach (Piece piece in PieceManager.yourPieces.Values)
-        //        tmpList.Add(piece);
-
-        //    for (int i = minXPos - 1; i >= 0; i--)
-        //    {
-        //        List<Piece> foundPiece = tmpList.FindAll(x => x.GetPoint().GetXPos() == i && x.GetIsAlive());
-        //        for (int j = 0; j < foundPiece.Count; j++)
-        //            currentTurnPieceList.Add(foundPiece[j]);
-        //    }
-        //}
     }
 }

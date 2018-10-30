@@ -17,7 +17,7 @@ public class TmpInputMng : MonoBehaviour, IInputClickHandler
     {
         if (GazeManager.Instance.HitObject == this.gameObject)
         {
-            this.gameObject.transform.Rotate(0, 45, 0);
+            this.gameObject.transform.Rotate(0, 30, 0);
             if (cubeIdx == 0)
             {
                 BoardPoint currentPoint = InputManager_S.instance.currentTurnPieceList[InputManager_S.instance.currentTargetIdx].GetPoint();
@@ -27,7 +27,6 @@ public class TmpInputMng : MonoBehaviour, IInputClickHandler
                     CustomMessage.Instance.SendMoveTarget((int)CustomMessage.Instance.LocalPlayer, (int)InputManager_S.instance.currentTurnPieceList[InputManager_S.instance.currentTargetIdx].GetPieceSettingIdx(), currentPoint.GetYPos() - 1, currentPoint.GetXPos());
                     InputManager_S.instance.currentTurnPieceList[InputManager_S.instance.currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() - 1], () =>
                     {
-                        CustomMessage.Instance.SendTurnChange((int)CustomMessage.Instance.LocalPlayer);
                     });
                 }
             }

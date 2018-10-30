@@ -10,24 +10,12 @@ public class keyInput : MonoBehaviour
 #if !UNITY_EDITOR
     ControllerInput controller;
 #endif
-    //public member property
-    public Transform dron;
 
-
- 
-    
     void Start()
     {
 #if !UNITY_EDITOR
         controller = new ControllerInput(0, 0.19f);
 #endif
-        
-
-        if (dron == null)
-        {
-            dron = GameObject.FindWithTag(Tags.Drone).GetComponent<Transform>();
-        }
-
     }
 
 
@@ -51,11 +39,7 @@ public class keyInput : MonoBehaviour
 #if UNITY_EDITOR
         if (Input.GetKeyUp(KeyCode.JoystickButton0)) // A 버튼 
         {
-
-           
             globalParameter.Press_ButttonA = 1;
-            Debug.Log("A");
-          
         }
         
        
@@ -89,15 +73,9 @@ public class keyInput : MonoBehaviour
           globalParameter.Press_ButttonA = 1;
                 
         }
-
-        
-
         leftStickX = controller.GetAxisLeftThumbstickX();
         leftStickY = controller.GetAxisLeftThumbstickY();
         globalParameter.LeftThumbstickX = leftStickX;
-        
-
-
 #endif
 
     }

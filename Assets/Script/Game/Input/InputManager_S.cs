@@ -100,18 +100,18 @@ public class InputManager_S : MonoBehaviour
         { flag2 = false; }
 
         #endregion
-        //if (Input.GetKeyDown(KeyCode.A) || prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed)
-        //{
-        //    BoardPoint currentPoint = PieceManager.myPieces[0].GetPoint();
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            BoardPoint currentPoint = PieceManager.myPieces[0].GetPoint();
 
-        //    if (currentPoint.GetYPos() > 0)
-        //    {
-        //        PieceManager.myPieces[0].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() - 1], () =>
-        //        {
-        //            //CustomMessage.Instance.SendTurnChange((int)CustomMessage.Instance.LocalPlayer);
-        //        });
-        //    }
-        //}
+            if (currentPoint.GetYPos() > 0)
+            {
+                PieceManager.myPieces[0].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() - 1], () =>
+                {
+                    //CustomMessage.Instance.SendTurnChange((int)CustomMessage.Instance.LocalPlayer);
+                });
+            }
+        }
         if (!GameManager.isGameStart)
             return;
         if (!isMyTurn)
