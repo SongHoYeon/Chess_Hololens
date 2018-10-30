@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour
             currentTurnPlayer = Enums.Player.Player2;
         else
             currentTurnPlayer = Enums.Player.Player1;
+        WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nGameManager-Changing");
 
         InputManager_S.instance.CheckMyTurn();
 

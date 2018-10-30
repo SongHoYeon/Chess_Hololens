@@ -128,34 +128,34 @@ public class InputManager_S : MonoBehaviour
         if (!isMyTurn)
             return;
 
-        if (Input.GetKeyDown(KeyCode.LeftArrow) || state.ThumbSticks.Left.X <= -1 && !flag1)
-        {
-            flag1 = true;
-            currentTargetIdx--;
-            if (currentTargetIdx < 0)
-                currentTargetIdx = currentTurnPieceList.Count - 1;
-        }
+        //if (Input.GetKeyDown(KeyCode.LeftArrow) || state.ThumbSticks.Left.X <= -1 && !flag1)
+        //{
+        //    flag1 = true;
+        //    currentTargetIdx--;
+        //    if (currentTargetIdx < 0)
+        //        currentTargetIdx = currentTurnPieceList.Count - 1;
+        //}
 
-        if (Input.GetKeyDown(KeyCode.RightArrow) || state.ThumbSticks.Left.X >= 1 && !flag2)
-        {
-            flag2 = true;
-            currentTargetIdx++;
-            if (currentTargetIdx > currentTurnPieceList.Count - 1)
-                currentTargetIdx = 0;
-        }
-        if (Input.GetKeyDown(KeyCode.A) || prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed)
-        {
-            BoardPoint currentPoint = currentTurnPieceList[currentTargetIdx].GetPoint();
+        //if (Input.GetKeyDown(KeyCode.RightArrow) || state.ThumbSticks.Left.X >= 1 && !flag2)
+        //{
+        //    flag2 = true;
+        //    currentTargetIdx++;
+        //    if (currentTargetIdx > currentTurnPieceList.Count - 1)
+        //        currentTargetIdx = 0;
+        //}
+        //if (Input.GetKeyDown(KeyCode.A) || prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed)
+        //{
+        //    BoardPoint currentPoint = currentTurnPieceList[currentTargetIdx].GetPoint();
 
-            if (currentPoint.GetYPos() > 0)
-            {
-                CustomMessage.Instance.SendMoveTarget((int)CustomMessage.Instance.LocalPlayer, (int)currentTurnPieceList[currentTargetIdx].GetPieceSettingIdx(), currentPoint.GetYPos() - 1, currentPoint.GetXPos());
-                currentTurnPieceList[currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() - 1], () =>
-                {
-                    //CustomMessage.Instance.SendTurnChange((int)CustomMessage.Instance.LocalPlayer);
-                });
-            }
-        }
+        //    if (currentPoint.GetYPos() > 0)
+        //    {
+        //        CustomMessage.Instance.SendMoveTarget((int)CustomMessage.Instance.LocalPlayer, (int)currentTurnPieceList[currentTargetIdx].GetPieceSettingIdx(), currentPoint.GetYPos() - 1, currentPoint.GetXPos());
+        //        currentTurnPieceList[currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() - 1], () =>
+        //        {
+        //            //CustomMessage.Instance.SendTurnChange((int)CustomMessage.Instance.LocalPlayer);
+        //        });
+        //    }
+        //}
 
         TargettingEffect();
     }

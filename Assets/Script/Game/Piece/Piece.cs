@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
+using HoloToolkit.Unity;
 
 public struct PieceMovement
 {
@@ -41,6 +42,7 @@ public abstract class Piece : MonoBehaviour
 
     public void SetMove(BoardPoint to, Action moveEndCallback)
     {
+        WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\n\"{0}\"Move Start", name);
         toMovePoint = to;
         //toMovePos = new Vector3(toMovePoint.transform.position.x, )
         moveTimer = 0f;
@@ -56,6 +58,7 @@ public abstract class Piece : MonoBehaviour
             transform.localPosition = new Vector3(transform.localPosition.x, 0f, transform.localPosition.z);
             if (Mathf.Abs(transform.position.z - toMovePoint.transform.position.z) < 0.1f)
             {
+                WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\n\"{0}\"Move Start", name);
                 currentPoint = toMovePoint;
                 moveFlag = false;
                 if (moveEndCallback != null)

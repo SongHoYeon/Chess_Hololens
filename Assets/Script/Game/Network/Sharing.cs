@@ -42,6 +42,8 @@ public class Sharing : MonoBehaviour
             targetPiece.name, (Defines.BoardProperty.COL_COUNT - 1) - col, (Defines.BoardProperty.ROW_COUNT - 1) - row);
         targetPiece.SetMove(PointCreater.pointCompList[(Defines.BoardProperty.COL_COUNT - 1) - col, (Defines.BoardProperty.ROW_COUNT - 1) - row], () => 
         {
+            WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nCallback");
+
             GameManager.instance.TurnChange(from);
             CustomMessage.Instance.SendTurnChange(from);
         });
