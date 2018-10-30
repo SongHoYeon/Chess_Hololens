@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     {
         _instance = this;
 
-        WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nGameManager Enable");
+        //WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nGameManager Enable");
         pointCreater.CreatePoints();
         pieceManager.CreateMyPiece();
         isGameStart = false;
@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
 
     public void GameStart()
     {
-        WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nGameManager GameStart");
+        //WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nGameManager GameStart");
         isGameStart = true;
         currentTurnPlayer = Enums.Player.Player1;
         InputManager_S.instance.CheckMyTurn();

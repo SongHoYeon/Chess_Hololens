@@ -149,7 +149,6 @@ public class PieceManager : MonoBehaviour
         obj.transform.name = "Player1_" + Enums.PieceSetting.Jol5.ToString();
         myPieces.Add(Enums.PieceSetting.Jol5, obj.GetComponent<Piece>());
 
-        WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nPieceManager MyPieceCreate");
         CustomMessage.Instance.SendCreateMyPiece();
     }
 
@@ -255,7 +254,6 @@ public class PieceManager : MonoBehaviour
         obj.transform.name = "Player2_" + Enums.PieceSetting.Jol5.ToString();
         yourPieces.Add(Enums.PieceSetting.Jol5, obj.GetComponent<Piece>());
 
-        WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nPieceManager YourCreate");
         GameManager.instance.GameStart();
     }
 }

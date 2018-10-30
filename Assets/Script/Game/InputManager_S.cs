@@ -152,7 +152,7 @@ public class InputManager_S : MonoBehaviour
                 CustomMessage.Instance.SendMoveTarget((int)CustomMessage.Instance.LocalPlayer, (int)currentTurnPieceList[currentTargetIdx].GetPieceSettingIdx(), currentPoint.GetYPos() - 1, currentPoint.GetXPos());
                 currentTurnPieceList[currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() - 1], () =>
                 {
-                    CustomMessage.Instance.SendTurnChange((int)CustomMessage.Instance.LocalPlayer);
+                    //CustomMessage.Instance.SendTurnChange((int)CustomMessage.Instance.LocalPlayer);
                 });
             }
         }

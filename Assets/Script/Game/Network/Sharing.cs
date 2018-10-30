@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HoloToolkit.Unity;
+using System.Linq;
 
 public class Sharing : MonoBehaviour
 {
@@ -25,14 +26,6 @@ public class Sharing : MonoBehaviour
         CustomMessage.Instance.MessageHandlers[CustomMessage.MessageType.CreatePhan] = this.receiveCreatePhan;
         CustomMessage.Instance.MessageHandlers[CustomMessage.MessageType.CreateMyPiece] = this.receiveCreateMyPiece;
         CustomMessage.Instance.MessageHandlers[CustomMessage.MessageType.TurnChange] = this.receiveTurnChange;
-        //CustomMessage.Instance.MessageHandlers[CustomMessage.MessageType.CallDino] = this.receiveCallDino;
-        //CustomMessage.Instance.MessageHandlers[CustomMessage.MessageType.helpButton] = this.receiveHelpButton;
-        //CustomMessage.Instance.MessageHandlers[CustomMessage.MessageType.returnButton] = this.receiveReturnButton;
-        //CustomMessage.Instance.MessageHandlers[CustomMessage.MessageType.divideBone] = this.receiveDivideBorn;
-        //CustomMessage.Instance.MessageHandlers[CustomMessage.MessageType.matchBorn] = this.receiveMatchBorn;
-        //CustomMessage.Instance.MessageHandlers[CustomMessage.MessageType.clickDivedBone] = this.receiveClickedDivideBone;
-        //CustomMessage.Instance.MessageHandlers[CustomMessage.MessageType.moveDividedBone] = this.receiveMovedDivideBone;
-        //CustomMessage.Instance.MessageHandlers[CustomMessage.MessageType.dinoColor] = this.receiveDinoColor;
     }
 
     private void receiveMoveTarget(NetworkInMessage msg)
@@ -44,7 +37,14 @@ public class Sharing : MonoBehaviour
         int row = CustomMessage.Instance.ReadInt(msg);
         int col = CustomMessage.Instance.ReadInt(msg);
 
-        PieceManager.yourPieces[(Enums.PieceSetting)pieceIdx].SetMove(PointCreater.pointCompList[(Defines.BoardProperty.COL_COUNT - 1) - col, (Defines.BoardProperty.ROW_COUNT - 1) - row], () => { CustomMessage.Instance.SendTurnChange((int)CustomMessage.Instance.LocalPlayer); });
+        Piece targetPiece = PieceManager.yourPieces.Values.First(x => ((int)x.GetPieceSettingIdx()) == pieceIdx);
+        WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nMove - from : \"{0}\" pieceName : \"{1}\", \nx : \"{2}\", y : \"{3}\"", from, 
+            targetPiece.name, (Defines.BoardProperty.COL_COUNT - 1) - col, (Defines.BoardProperty.ROW_COUNT - 1) - row);
+        targetPiece.SetMove(PointCreater.pointCompList[(Defines.BoardProperty.COL_COUNT - 1) - col, (Defines.BoardProperty.ROW_COUNT - 1) - row], () => 
+        {
+            GameManager.instance.TurnChange(from);
+            CustomMessage.Instance.SendTurnChange(from);
+        });
 
     }
     private void receiveCreatePhan(NetworkInMessage msg)
@@ -59,17 +59,12 @@ public class Sharing : MonoBehaviour
         phanObj.SetActive(true);
         phanObj.transform.position = p;
         phanObj.transform.localEulerAngles = new Vector3(-25f, 0f, 0f);
-
-        //if (TrexControll.Instance != null)
-        //{
-        //    TrexControll.Instance.DinoTransformWithWall(p, r, wallP);
-        //}
     }
 
     private void receiveCreateMyPiece(NetworkInMessage msg)
     {
         long id = msg.ReadInt64();
-        WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nSharing ReceiveMyPiece");
+        //WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nSharing ReceiveMyPiece");
         pieceManager.CreateYourPiece();
     }
 
