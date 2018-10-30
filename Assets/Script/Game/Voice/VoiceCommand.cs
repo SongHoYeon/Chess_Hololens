@@ -21,11 +21,11 @@ public class VoiceCommand : MonoBehaviour
         {
             if (!check)
             {
+                CustomMessage.Instance.SendCreatePhan(Newobject.transform.position);
                 Newobject.SetActive(true);
                 Newobject.transform.position = Camera.main.transform.position + (Camera.main.transform.forward+ new Vector3(0, -5f, 18f));//Camera.main.transform.forward;
                 Newobject.transform.localEulerAngles = new Vector3(-25f, 0f, 0f);
                 check = true;
-                CustomMessage.Instance.SendCreatePhan(Newobject.transform.position);
             }
         }
       );
@@ -40,11 +40,11 @@ public class VoiceCommand : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.C))
         {
+            CustomMessage.Instance.SendCreatePhan(Newobject.transform.position);
             Newobject.SetActive(true);
             Newobject.transform.position = Camera.main.transform.position + (Camera.main.transform.forward + new Vector3(0, -5f, 18f));//Camera.main.transform.forward;
             Newobject.transform.localEulerAngles = new Vector3(-25f, 0f, 0f);
             check = true;
-            CustomMessage.Instance.SendCreatePhan(Newobject.transform.position);
         }
     }
     private void KeywordRecognizer_OnPhraseRecognized(PhraseRecognizedEventArgs args)
@@ -62,13 +62,13 @@ public class VoiceCommand : MonoBehaviour
         {
             if (!check)
             {
+                CustomMessage.Instance.SendCreatePhan(Newobject.transform.position);
                 Newobject.SetActive(true);
                 Newobject.transform.position = Markerobject.transform.position;
                 Newobject.transform.localEulerAngles = new Vector3(-25f, 0f, 0f);
                 //TODO remove
                 //Instantiate(Newobject, Markerobject.transform.position, Markerobject.transform.rotation);
                 check = true;
-                CustomMessage.Instance.SendCreatePhan(Newobject.transform.position);
             }
         }
       );

@@ -17,7 +17,7 @@ public class TmpInputMng : MonoBehaviour, IInputClickHandler
     {
         if (GazeManager.Instance.HitObject == this.gameObject)
         {
-            this.gameObject.transform.Rotate(0, 90, 0);
+            this.gameObject.transform.Rotate(0, 45, 0);
             if (cubeIdx == 0)
             {
                 BoardPoint currentPoint = InputManager_S.instance.currentTurnPieceList[InputManager_S.instance.currentTargetIdx].GetPoint();
