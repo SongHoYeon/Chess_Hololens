@@ -43,8 +43,9 @@ public abstract class Piece : MonoBehaviour
     public void SetMove(BoardPoint to, Action moveEndCallback)
     {
         WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\n\"{0}\"Move Start", name);
+        //Debug.Log("start");
         toMovePoint = to;
-        //toMovePos = new Vector3(toMovePoint.transform.position.x, )
+
         moveTimer = 0f;
         moveFlag = true;
         this.moveEndCallback = moveEndCallback;
@@ -55,10 +56,10 @@ public abstract class Piece : MonoBehaviour
         {
             moveTimer += Time.deltaTime / 1f;
             transform.position = Vector3.Lerp(transform.position, toMovePoint.transform.position, moveTimer);
-            transform.localPosition = new Vector3(transform.localPosition.x, 0f, transform.localPosition.z);
-            if (Mathf.Abs(transform.position.z - toMovePoint.transform.position.z) < 0.1f)
+            if (Vector3.Distance(transform.localPosition, toMovePoint.transform.localPosition) < 0.1f)
             {
-                WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\n\"{0}\"Move Start", name);
+                //Debug.Log("End");
+                WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\n\"{0}\"Move End", name);
                 currentPoint = toMovePoint;
                 moveFlag = false;
                 if (moveEndCallback != null)

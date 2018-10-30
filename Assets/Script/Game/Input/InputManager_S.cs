@@ -18,10 +18,6 @@ public class InputManager_S : MonoBehaviour
         }
     }
 
-    bool playerIndexSet = false;
-    PlayerIndex playerIndex;
-    GamePadState state;
-    GamePadState prevState;
     bool flag1 = false;
     bool flag2 = false;
 
@@ -98,64 +94,55 @@ public class InputManager_S : MonoBehaviour
     void Update()
     {
         #region Controller Setting
-        if (!playerIndexSet || !prevState.IsConnected)
-        {
-            for (int i = 0; i < 4; ++i)
-            {
-                PlayerIndex testPlayerIndex = (PlayerIndex)i;
-                GamePadState testState = GamePad.GetState(testPlayerIndex);
-                if (testState.IsConnected)
-                {
-                    Debug.Log(string.Format("GamePad found {0}", testPlayerIndex));
-                    playerIndex = testPlayerIndex;
-                    playerIndexSet = true;
-                }
-            }
-        }
-
-        prevState = state;
-        state = GamePad.GetState(playerIndex);
-
-        if (state.ThumbSticks.Left.X > -1 && flag1)
+        if (globalParameter.LeftThumbstickX > -1 && flag1)
         { flag1 = false; }
-        if (state.ThumbSticks.Left.X < 1 && flag2)
+        if (globalParameter.LeftThumbstickX < 1 && flag2)
         { flag2 = false; }
 
         #endregion
-
-        if (!GameManager.isGameStart)
-            return;
-        if (!isMyTurn)
-            return;
-
-        //if (Input.GetKeyDown(KeyCode.LeftArrow) || state.ThumbSticks.Left.X <= -1 && !flag1)
-        //{
-        //    flag1 = true;
-        //    currentTargetIdx--;
-        //    if (currentTargetIdx < 0)
-        //        currentTargetIdx = currentTurnPieceList.Count - 1;
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.RightArrow) || state.ThumbSticks.Left.X >= 1 && !flag2)
-        //{
-        //    flag2 = true;
-        //    currentTargetIdx++;
-        //    if (currentTargetIdx > currentTurnPieceList.Count - 1)
-        //        currentTargetIdx = 0;
-        //}
         //if (Input.GetKeyDown(KeyCode.A) || prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed)
         //{
-        //    BoardPoint currentPoint = currentTurnPieceList[currentTargetIdx].GetPoint();
+        //    BoardPoint currentPoint = PieceManager.myPieces[0].GetPoint();
 
         //    if (currentPoint.GetYPos() > 0)
         //    {
-        //        CustomMessage.Instance.SendMoveTarget((int)CustomMessage.Instance.LocalPlayer, (int)currentTurnPieceList[currentTargetIdx].GetPieceSettingIdx(), currentPoint.GetYPos() - 1, currentPoint.GetXPos());
-        //        currentTurnPieceList[currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() - 1], () =>
+        //        PieceManager.myPieces[0].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() - 1], () =>
         //        {
         //            //CustomMessage.Instance.SendTurnChange((int)CustomMessage.Instance.LocalPlayer);
         //        });
         //    }
         //}
+        if (!GameManager.isGameStart)
+            return;
+        if (!isMyTurn)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || (globalParameter.LeftThumbstickX <= -1 && !flag1))
+        {
+            flag1 = true;
+            currentTargetIdx--;
+            if (currentTargetIdx < 0)
+                currentTargetIdx = currentTurnPieceList.Count - 1;
+        }
+
+        if (Input.GetKeyDown(KeyCode.RightArrow) || (globalParameter.LeftThumbstickX >= 1 && !flag2))
+        {
+            flag2 = true;
+            currentTargetIdx++;
+            if (currentTargetIdx > currentTurnPieceList.Count - 1)
+                currentTargetIdx = 0;
+        }
+        if (Input.GetKeyDown(KeyCode.A) || globalParameter.Press_ButttonA == 1)
+        {
+            BoardPoint currentPoint = currentTurnPieceList[currentTargetIdx].GetPoint();
+
+            if (currentPoint.GetYPos() > 0)
+            {
+                CustomMessage.Instance.SendMoveTarget((int)CustomMessage.Instance.LocalPlayer, (int)currentTurnPieceList[currentTargetIdx].GetPieceSettingIdx(), currentPoint.GetYPos() - 1, currentPoint.GetXPos());
+                currentTurnPieceList[currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() - 1], () =>
+                { });
+            }
+        }
 
         TargettingEffect();
     }
