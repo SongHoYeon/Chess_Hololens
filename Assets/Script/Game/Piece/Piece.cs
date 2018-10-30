@@ -56,7 +56,7 @@ public abstract class Piece : MonoBehaviour
         {
             moveTimer += Time.deltaTime / 1f;
             transform.position = Vector3.Lerp(transform.position, toMovePoint.transform.position, moveTimer);
-            WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\n\"{0}\" Moveing", Vector3.Distance(transform.localPosition, toMovePoint.transform.localPosition) < 0.1f);
+            //WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\n\"{0}\" Moveing", Vector3.Distance(transform.localPosition, toMovePoint.transform.localPosition) < 0.1f);
             if (Vector3.Distance(transform.localPosition, toMovePoint.transform.localPosition) < 0.1f)
             {
                 //Debug.Log("End");

@@ -69,7 +69,7 @@ public class InputManager_S : MonoBehaviour
             isMyTurn = true;
 
             currentTargetIdx = 0;
-            currentCursor = mySelectCursor;
+            currentCursor = yourSelectCursor;
             currentCursor.SetActive(true);
 
             currentTurnPieceList.Clear();
@@ -150,7 +150,7 @@ public class InputManager_S : MonoBehaviour
     private void TargettingEffect()
     {
         currentCursor.transform.parent = currentTurnPieceList[currentTargetIdx].transform;
-        currentCursor.transform.localPosition = new Vector3(0f, 1f, 0f);
+        currentCursor.transform.localPosition = Vector3.zero;
 
         //ShowMoveDirection();
     }
