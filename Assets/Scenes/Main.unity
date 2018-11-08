@@ -526,7 +526,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ClientRole: 0
-  ServerAddress: 10.70.8.204
+  ServerAddress: 10.70.12.55
   defaultSessionName: DefaultSession
   defaultRoomName: DefaultRoom
   KeepRoomAlive: 0
