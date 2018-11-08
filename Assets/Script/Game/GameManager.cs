@@ -28,16 +28,16 @@ public class GameManager : MonoBehaviour
     void OnEnable()
     {
         _instance = this;
+        isGameStart = false;
 
-        //WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nGameManager Enable");
+        WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nGameManager Enable");
         pointCreater.CreatePoints();
         pieceManager.CreateMyPiece();
-        isGameStart = false;
     }
 
     public void GameStart()
     {
-        //WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nGameManager GameStart");
+        WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nGameManager GameStart");
         isGameStart = true;
         currentTurnPlayer = Enums.Player.Player1;
         InputManager_S.instance.CheckMyTurn();

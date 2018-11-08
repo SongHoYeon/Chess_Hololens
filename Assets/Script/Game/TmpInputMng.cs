@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using HoloToolkit.Unity.InputModule;
+using HoloToolkit.Unity;
 
 public class TmpInputMng : MonoBehaviour, IInputClickHandler
 {
@@ -21,6 +22,7 @@ public class TmpInputMng : MonoBehaviour, IInputClickHandler
             if (cubeIdx == 0)
             {
                 BoardPoint currentPoint = InputManager_S.instance.currentTurnPieceList[InputManager_S.instance.currentTargetIdx].GetPoint();
+                WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nMoveTargetName : \"{0}\"", InputManager_S.instance.currentTurnPieceList[InputManager_S.instance.currentTargetIdx].name);
 
                 if (currentPoint.GetYPos() > 0)
                 {

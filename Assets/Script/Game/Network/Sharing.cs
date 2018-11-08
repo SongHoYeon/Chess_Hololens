@@ -56,7 +56,8 @@ public class Sharing : MonoBehaviour
         Vector3 p = CustomMessage.Instance.ReadVector3(msg);
 
         CustomMessage.Instance.LocalPlayer = Enums.Player.Player2;
-        CustomMessage.Instance.idAllocCheck = true;
+        if (WorldAnchorManager.Instance != null && WorldAnchorManager.Instance.AnchorDebugText != null)
+            WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nLocalPlayer : \"{0}\"", CustomMessage.Instance.LocalPlayer.ToString());
 
         phanObj.SetActive(true);
         phanObj.transform.position = p;

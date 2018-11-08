@@ -86,7 +86,8 @@ public class CustomMessage : Singleton<CustomMessage>
 
             AppendVector3(msg, position);
             LocalPlayer = Enums.Player.Player1;
-            idAllocCheck = true;
+            if (WorldAnchorManager.Instance != null && WorldAnchorManager.Instance.AnchorDebugText != null)
+                WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nLocalPlayer : \"{0}\"", LocalPlayer.ToString());
 
             // Send the message as a broadcast, which will cause the server to forward it to all other users in the session.
             serverConnection.Broadcast(
@@ -182,17 +183,7 @@ public class CustomMessage : Singleton<CustomMessage>
             serverConnection.AddListener(index, connectionAdapter);
         }
     }
-    private void Update()
-    {
-        if (!logcheck && idAllocCheck)
-        {
-            if (WorldAnchorManager.Instance != null && WorldAnchorManager.Instance.AnchorDebugText != null)
-            {
-                WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nLocalPlayer : \"{0}\"", LocalPlayer.ToString());
-                logcheck = true;
-            }
-        }
-    }
+
     private NetworkOutMessage CreateMessage(byte messageType)
     {
         NetworkOutMessage msg = serverConnection.CreateMessage(messageType);

@@ -4,6 +4,7 @@ using UnityEngine;
 using XInputDotNetPure;
 using UnityEngine.Windows.Speech;
 using System.Linq;
+using HoloToolkit.Unity;
 
 public class InputManager_S : MonoBehaviour
 {
@@ -85,6 +86,7 @@ public class InputManager_S : MonoBehaviour
                 for (int j = 0; j < foundPiece.Count; j++)
                     currentTurnPieceList.Add(foundPiece[j]);
             }
+            WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nMyTurnCheck. pieceCount : \"{0}\"", currentTurnPieceList.Count.ToString());
             TargettingEffect();
         }
         else
@@ -100,18 +102,7 @@ public class InputManager_S : MonoBehaviour
         { flag2 = false; }
 
         #endregion
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            BoardPoint currentPoint = PieceManager.myPieces[0].GetPoint();
 
-            if (currentPoint.GetYPos() > 0)
-            {
-                PieceManager.myPieces[0].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() - 1], () =>
-                {
-                    //CustomMessage.Instance.SendTurnChange((int)CustomMessage.Instance.LocalPlayer);
-                });
-            }
-        }
         if (!GameManager.isGameStart)
             return;
         if (!isMyTurn)
@@ -135,7 +126,7 @@ public class InputManager_S : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A) || globalParameter.Press_ButttonA == 1)
         {
             BoardPoint currentPoint = currentTurnPieceList[currentTargetIdx].GetPoint();
-
+            WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nMoveTargetName : \"{0}\"", currentTurnPieceList[currentTargetIdx].name);
             if (currentPoint.GetYPos() > 0)
             {
                 CustomMessage.Instance.SendMoveTarget((int)CustomMessage.Instance.LocalPlayer, (int)currentTurnPieceList[currentTargetIdx].GetPieceSettingIdx(), currentPoint.GetYPos() - 1, currentPoint.GetXPos());
