@@ -224,6 +224,11 @@ namespace HoloToolkit.Sharing
 
         protected override void Awake()
         {
+#if UNITY_EDITOR
+        enabled = false;
+#else 
+        enabled = true;
+#endif
             base.Awake();
 
             AppInstanceUniqueId = Guid.NewGuid().ToString();

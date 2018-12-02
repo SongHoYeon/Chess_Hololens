@@ -1,5 +1,5 @@
 ﻿using HoloToolkit.Sharing;
-using SpectatorView;
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +8,8 @@ using System.Linq;
 
 public class Sharing : MonoBehaviour
 {
+    [SerializeField]
+    private VoiceCommand voiceCommandMng;
     [SerializeField]
     private GameObject phanObj;
     [SerializeField]
@@ -62,6 +64,8 @@ public class Sharing : MonoBehaviour
         phanObj.SetActive(true);
         phanObj.transform.position = p;
         phanObj.transform.localEulerAngles = new Vector3(-25f, 0f, 0f);
+
+        voiceCommandMng.check = true;
     }
 
     private void receiveCreateMyPiece(NetworkInMessage msg)

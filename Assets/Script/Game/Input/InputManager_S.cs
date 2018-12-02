@@ -44,10 +44,11 @@ public class InputManager_S : MonoBehaviour
     [HideInInspector]
     public int currentTargetIdx;
 
+    //private bool is
     KeywordRecognizer keywordRecognizer = null;
     Dictionary<string, System.Action> keywords = new Dictionary<string, System.Action>();
 
-    private void OnEnable()
+    public void Init()
     {
         _instance = this;
 
@@ -131,7 +132,9 @@ public class InputManager_S : MonoBehaviour
             {
                 CustomMessage.Instance.SendMoveTarget((int)CustomMessage.Instance.LocalPlayer, (int)currentTurnPieceList[currentTargetIdx].GetPieceSettingIdx(), currentPoint.GetYPos() - 1, currentPoint.GetXPos());
                 currentTurnPieceList[currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() - 1], () =>
-                { });
+                {
+                    CheckMyTurn();
+                });
             }
         }
 

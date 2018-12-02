@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Windows.Speech;
+using UnityEngine.Networking;
 
-public class VoiceCommand : MonoBehaviour
+public class VoiceCommand : NetworkBehaviour
 {
     KeywordRecognizer keywordRecognizer = null;
     Dictionary<string, System.Action> keywords = new Dictionary<string, System.Action>();
     private bool MusicOn = false;
     public GameObject Newobject;
     public GameObject Markerobject;
+
+    [HideInInspector]
     public bool check = false;
     // Use this for initialization
     void Start()
@@ -40,11 +43,14 @@ public class VoiceCommand : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.C))
         {
-            CustomMessage.Instance.SendCreatePhan(Newobject.transform.position);
-            Newobject.SetActive(true);
-            Newobject.transform.position = Camera.main.transform.position + (Camera.main.transform.forward + new Vector3(0, -5f, 18f));//Camera.main.transform.forward;
-            Newobject.transform.localEulerAngles = new Vector3(-25f, 0f, 0f);
-            check = true;
+            if (!check)
+            {
+                //CustomMessage.Instance.SendCreatePhan(Newobject.transform.position);
+                Newobject.SetActive(true);
+                Newobject.transform.position = Camera.main.transform.position + (Camera.main.transform.forward + new Vector3(0, -5f, 18f));//Camera.main.transform.forward;
+                Newobject.transform.localEulerAngles = new Vector3(-25f, 0f, 0f);
+                check = true;
+            }
         }
     }
     private void KeywordRecognizer_OnPhraseRecognized(PhraseRecognizedEventArgs args)
@@ -58,20 +64,18 @@ public class VoiceCommand : MonoBehaviour
 
     public void checkcall()
     {
-        keywords.Add("Play", () =>
-        {
-            if (!check)
-            {
-                CustomMessage.Instance.SendCreatePhan(Newobject.transform.position);
-                Newobject.SetActive(true);
-                Newobject.transform.position = Markerobject.transform.position;
-                Newobject.transform.localEulerAngles = new Vector3(-25f, 0f, 0f);
-                //TODO remove
-                //Instantiate(Newobject, Markerobject.transform.position, Markerobject.transform.rotation);
-                check = true;
-            }
-        }
-      );
+        //keywords.Add("Play", () =>
+        //{
+        //    if (!check)
+        //    {
+        //        CustomMessage.Instance.SendCreatePhan(Newobject.transform.position);
+        //        Newobject.SetActive(true);
+        //        Newobject.transform.position = Markerobject.transform.position;
+        //        Newobject.transform.localEulerAngles = new Vector3(-25f, 0f, 0f);
+        //        check = true;
+        //    }
+        //}
+      //);
 
 
         keywordRecognizer = new KeywordRecognizer(keywords.Keys.ToArray());

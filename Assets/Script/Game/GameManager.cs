@@ -28,11 +28,17 @@ public class GameManager : MonoBehaviour
     void OnEnable()
     {
         _instance = this;
+        inputManager.Init();
+
         isGameStart = false;
 
         WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nGameManager Enable");
         pointCreater.CreatePoints();
         pieceManager.CreateMyPiece();
+#if UNITY_EDITOR
+        GameStart();
+#else
+#endif
     }
 
     public void GameStart()
@@ -45,11 +51,15 @@ public class GameManager : MonoBehaviour
 
     public void TurnChange(int from)
     {
+#if UNITY_EDITOR
+#else
         if (from == (int)Enums.Player.Player1)
             currentTurnPlayer = Enums.Player.Player2;
         else
             currentTurnPlayer = Enums.Player.Player1;
         WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nGameManager-Changing");
+#endif
+
 
         InputManager_S.instance.CheckMyTurn();
     }
