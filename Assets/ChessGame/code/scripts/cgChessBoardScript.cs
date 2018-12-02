@@ -153,7 +153,7 @@ public class cgChessBoardScript : MonoBehaviour
     /// This is the underlying board representation, we test and find legality of moves on this.
     /// </summary>
     [SerializeField]
-    private cgBoard _abstractBoard = null;//new cgBoard();
+    public cgBoard _abstractBoard = null;//new cgBoard();
 
     /// <summary>
     /// All currently captured pieces.
@@ -163,7 +163,7 @@ public class cgChessBoardScript : MonoBehaviour
     /// <summary>
     /// All currently uncaptured pieces on the board.
     /// </summary>
-    private List<cgChessPieceScript> _livePieces = new List<cgChessPieceScript>();
+    public List<cgChessPieceScript> _livePieces = new List<cgChessPieceScript>();
 
     /// <summary>
     /// The AI opponent
@@ -183,7 +183,7 @@ public class cgChessBoardScript : MonoBehaviour
     /// <summary>
     /// The current piece being dragged by the mouse.
     /// </summary>
-    private cgChessPieceScript _downPiece;
+    public cgChessPieceScript _downPiece;
 
     /// <summary>
     /// Logged moves, used by coordinate notation.
@@ -566,9 +566,9 @@ public class cgChessBoardScript : MonoBehaviour
     /// A piece has callbacked that the user has pressed it.
     /// </summary>
     /// <param name="piece"></param>
-    private void _pieceDown(cgChessPieceScript piece)
+    public List<cgSquareScript> _pieceDown_(cgChessPieceScript piece)
     {
-
+        List<cgSquareScript> highlightSqureList = new List<cgSquareScript>();
         if (highlightLegalMoves && playerCanMove)
         {
             List<cgSimpleMove> moves = _abstractBoard.findStrictLegalMoves(_abstractBoard.whiteTurnToMove);
@@ -578,11 +578,15 @@ public class cgChessBoardScript : MonoBehaviour
                 {
                     if (move is cgCastlingMove)
                     {//Highlighting rook instead of king destination when castling.
-                        _getSquare(_abstractBoard.SquareNames[(move as cgCastlingMove).secondFrom]).changeColor(_getSquare(_abstractBoard.SquareNames[(move as cgCastlingMove).secondFrom]).legalMoveToColor);
+                        cgSquareScript target = _getSquare(_abstractBoard.SquareNames[(move as cgCastlingMove).secondFrom]);
+                        target.changeColor(_getSquare(_abstractBoard.SquareNames[(move as cgCastlingMove).secondFrom]).legalMoveToColor);
+                        highlightSqureList.Add(target);
                     }
                     else
                     {
-                        _getSquare(_abstractBoard.SquareNames[move.to]).changeColor(_getSquare(_abstractBoard.SquareNames[move.from]).legalMoveToColor);
+                        cgSquareScript target = _getSquare(_abstractBoard.SquareNames[move.to]);
+                        target.changeColor(_getSquare(_abstractBoard.SquareNames[move.from]).legalMoveToColor);
+                        highlightSqureList.Add(target);
                     }
                 }
 
@@ -590,17 +594,44 @@ public class cgChessBoardScript : MonoBehaviour
         }
         _downPiece = piece;
 
-
+        return highlightSqureList;
         //int indexPosition = cgGlobal.IndexFromCellName(_downPiece.square.uniqueName);
 
         //_abstractBoard.squares[indexPosition = 2//make the changes you want.
     }
+    public void _pieceDown(cgChessPieceScript piece)
+    {
+        if (highlightLegalMoves && playerCanMove)
+        {
+            List<cgSimpleMove> moves = _abstractBoard.findStrictLegalMoves(_abstractBoard.whiteTurnToMove);
+            foreach (cgSimpleMove move in moves)
+            {
+                if (_abstractBoard.SquareNames[move.from] == piece.square.uniqueName)
+                {
+                    if (move is cgCastlingMove)
+                    {//Highlighting rook instead of king destination when castling.
+                        cgSquareScript target = _getSquare(_abstractBoard.SquareNames[(move as cgCastlingMove).secondFrom]);
+                        target.changeColor(_getSquare(_abstractBoard.SquareNames[(move as cgCastlingMove).secondFrom]).legalMoveToColor);
+                    }
+                    else
+                    {
+                        cgSquareScript target = _getSquare(_abstractBoard.SquareNames[move.to]);
+                        target.changeColor(_getSquare(_abstractBoard.SquareNames[move.from]).legalMoveToColor);
+                    }
+                }
 
+            }
+        }
+        _downPiece = piece;
+        //int indexPosition = cgGlobal.IndexFromCellName(_downPiece.square.uniqueName);
+
+        //_abstractBoard.squares[indexPosition = 2//make the changes you want.
+    }
     /// <summary>
     /// The user has released a dragged piece. Verify that its a legal move, if so perform the move and perform the next move if appropriate mode.
     /// </summary>
     /// <param name="piece"></param>
-    private void _pieceUp(cgChessPieceScript piece)
+    public void _pieceUp(cgChessPieceScript piece)
     {
         if (_downPiece != null)
         {
@@ -651,7 +682,60 @@ public class cgChessBoardScript : MonoBehaviour
             foreach (cgSquareScript square in _squares) square.changeColor(square.startColor);
         }
     }
+    public void _pieceUp(cgChessPieceScript piece, cgSquareScript target, Action callback)
+    {
+        if (_downPiece != null)
+        {
+            if (playerCanMove || Mode == BoardMode.PlayerVsPlayer)
+            {
+                cgSimpleMove legalMove = null;
+                cgSquareScript closestSquare = target;
+                List<cgSimpleMove> legalMoves = _abstractBoard.findLegalMoves(whiteTurnToMove);
+                foreach (cgSimpleMove move in legalMoves)
+                {
+                    if (move is cgCastlingMove)
+                    {
+                        if (_abstractBoard.SquareNames[move.from] == _downPiece.square.uniqueName && _abstractBoard.SquareNames[(move as cgCastlingMove).secondFrom] == closestSquare.uniqueName)
+                        {
 
+                            legalMove = move;
+                        }
+
+                    }
+                    else
+                    {
+                        if (_abstractBoard.SquareNames[move.from] == _downPiece.square.uniqueName && _abstractBoard.SquareNames[move.to] == closestSquare.uniqueName)
+                        {
+                            legalMove = move;
+                        }
+                    }
+                }
+                //test legality of move here.
+
+                if (legalMove != null && _abstractBoard.verifyLegality(legalMove))
+                {
+                    _makeMove(legalMove);
+
+                    if (callback != null)
+                        callback();
+                    if (Mode == BoardMode.PlayerVsEngine) MakeEngineMove(_abstractBoard.duplicate(), false, _engineCallback);
+                    else if (Mode == BoardMode.EngineVsPlayer) MakeEngineMove(_abstractBoard.duplicate(), true, _engineCallback);
+                }
+                else piece.moveToSquare(piece.square);
+            }
+            else piece.moveToSquare(piece.square);
+            _downPiece = null;
+        }
+        else
+        {
+            piece.moveToSquare(piece.square);
+            _downPiece = null;
+        }
+        if (highlightLastMove)
+        {//revert colors if highlighting is active
+            foreach (cgSquareScript square in _squares) square.changeColor(square.startColor);
+        }
+    }
     /// <summary>
     /// Find the square location at the provided position, used to find the square where the user is dragging and dropping a piece.
     /// </summary>
@@ -1013,7 +1097,7 @@ public class cgChessBoardScript : MonoBehaviour
 
     }
 
-    private cgSquareScript _getSquare(string p)
+    public cgSquareScript _getSquare(string p)
     {
         foreach (cgSquareScript square in getSquares()) if (square != null && square.uniqueName == p) return square;
         return null;

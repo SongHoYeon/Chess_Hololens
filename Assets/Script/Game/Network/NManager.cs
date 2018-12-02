@@ -5,6 +5,9 @@ using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
 public class NManager : NetworkManager
 {
+    [SerializeField]
+    private InputManager_S inputComp;
+
     public NetworkConnection serverConnection;
     public int myLensIdx;
 
@@ -19,6 +22,9 @@ public class NManager : NetworkManager
 
         client.RegisterHandler(CustomMsgType.Send_LensIdx, OnCustomMsgHandler);
         client.RegisterHandler(CustomMsgType.Receive_ControllerMove, OnCustomMsgHandler);
+        client.RegisterHandler(CustomMsgType.Send_MultiReady, OnCustomMsgHandler);
+        client.RegisterHandler(CustomMsgType.Send_GameStart, OnCustomMsgHandler);
+        client.RegisterHandler(CustomMsgType.Send_SetTurnIdx, OnCustomMsgHandler);
     }
 
     public override void OnClientConnect(NetworkConnection conn)
@@ -42,17 +48,48 @@ public class NManager : NetworkManager
             Send_LensIdx_Message message = msg.ReadMessage<Send_LensIdx_Message>();
             Debug.Log("MyLensIdx :  " + message.idx.ToString());
             myLensIdx = message.idx;
+
+            inputComp.Init(myLensIdx);
         }
         else if (msg.msgType == CustomMsgType.Receive_ControllerMove)
         {
             Receive_ControllerMove_Message message = msg.ReadMessage<Receive_ControllerMove_Message>();
 
+            inputComp.ControlInput(message.input);
             if (message.targetIdx == myLensIdx)
+            {
                 Debug.Log("MyTern - Move Target :  " + message.targetIdx.ToString() + "  Input : " + message.input.ToString());
+            }
             else
+            {
                 Debug.Log("OtherTern - Move Target :  " + message.targetIdx.ToString() + "  Input : " + message.input.ToString());
-            
+            }
+
             // TODO : Move
+        }
+        else if (msg.msgType == CustomMsgType.Send_MultiReady)
+        {
+            // TODO : MultiReady
+        }
+        else if (msg.msgType == CustomMsgType.Send_GameStart)
+        {
+            // TODO : GameStart
+            inputComp.isGameStart = true;
+        }
+        else if (msg.msgType == CustomMsgType.Send_SetTurnIdx)
+        {
+            // TODO : MyTurn Check
+            Send_SetTurnIdx_Message message = msg.ReadMessage<Send_SetTurnIdx_Message>();
+
+            if (message.targetIdx == myLensIdx)
+            {
+                Debug.Log("Setted My Turn");
+            }
+            else
+            {
+                Debug.Log("Setted Other Turn");
+            }
+            inputComp.TurnChangeEvent(message.targetIdx);
         }
     }
 }

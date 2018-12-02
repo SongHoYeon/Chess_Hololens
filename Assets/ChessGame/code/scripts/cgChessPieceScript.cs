@@ -43,6 +43,7 @@ public class cgChessPieceScript : MonoBehaviour
 
     }
 
+    public int idx;
 
     /// <summary>
     /// The type of this piece.

@@ -9,6 +9,10 @@ public class CustomMsgType  {
     public static short Receive_Connect = MsgType.Highest + 1;
     public static short Send_LensIdx = MsgType.Highest + 2;
     public static short Receive_ControllerMove = MsgType.Highest + 3;
+    public static short Send_MultiReady = MsgType.Highest + 4;
+    public static short Send_GameStart = MsgType.Highest + 5;
+    public static short Send_SetTurnIdx = MsgType.Highest + 6;
+    public static short Send_TurnEnd = MsgType.Highest + 7;
 }
 
 namespace UnityEngine.Networking.NetworkSystem
@@ -32,6 +36,11 @@ namespace UnityEngine.Networking.NetworkSystem
         public int targetIdx;
         // 0 : left , 1 : right , 2 : confirm , 3 : cancel
         public int input;
+    }
 
+    public class Send_SetTurnIdx_Message : MessageBase
+    {
+        // TargetTurnLens Idx
+        public int targetIdx;
     }
 }
