@@ -9,10 +9,11 @@ public class CustomMsgType  {
     public static short Receive_Connect = MsgType.Highest + 1;
     public static short Send_LensIdx = MsgType.Highest + 2;
     public static short Receive_ControllerMove = MsgType.Highest + 3;
-    public static short Send_MultiReady = MsgType.Highest + 4;
     public static short Send_GameStart = MsgType.Highest + 5;
     public static short Send_SetTurnIdx = MsgType.Highest + 6;
     public static short Send_TurnEnd = MsgType.Highest + 7;
+    public static short Receive_MultiGameStartBtnEvent = MsgType.Highest + 9;
+    public static short Receive_SingleGameStartBtnEvent = MsgType.Highest + 10;
 }
 
 namespace UnityEngine.Networking.NetworkSystem

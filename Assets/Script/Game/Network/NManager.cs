@@ -7,6 +7,8 @@ public class NManager : NetworkManager
 {
     [SerializeField]
     private InputManager_S inputComp;
+    [SerializeField]
+    private cgChessBoardScript boardComp;
 
     public NetworkConnection serverConnection;
     public int myLensIdx;
@@ -22,9 +24,10 @@ public class NManager : NetworkManager
 
         client.RegisterHandler(CustomMsgType.Send_LensIdx, OnCustomMsgHandler);
         client.RegisterHandler(CustomMsgType.Receive_ControllerMove, OnCustomMsgHandler);
-        client.RegisterHandler(CustomMsgType.Send_MultiReady, OnCustomMsgHandler);
         client.RegisterHandler(CustomMsgType.Send_GameStart, OnCustomMsgHandler);
         client.RegisterHandler(CustomMsgType.Send_SetTurnIdx, OnCustomMsgHandler);
+        client.RegisterHandler(CustomMsgType.Receive_MultiGameStartBtnEvent, OnCustomMsgHandler);
+        client.RegisterHandler(CustomMsgType.Receive_SingleGameStartBtnEvent, OnCustomMsgHandler);
     }
 
     public override void OnClientConnect(NetworkConnection conn)
@@ -39,6 +42,10 @@ public class NManager : NetworkManager
     });
     }
 
+    private void Update()
+    {
+        //Debug.Log("Is Host" + )
+    }
     private void OnCustomMsgHandler(NetworkMessage msg)
     {//서버가 받는 메세지들
         Debug.Log(msg.ToString() + " : ");
@@ -67,14 +74,11 @@ public class NManager : NetworkManager
 
             // TODO : Move
         }
-        else if (msg.msgType == CustomMsgType.Send_MultiReady)
-        {
-            // TODO : MultiReady
-        }
         else if (msg.msgType == CustomMsgType.Send_GameStart)
         {
-            // TODO : GameStart
+            Debug.Log("SendGameStart");
             inputComp.isGameStart = true;
+            boardComp.Init();
         }
         else if (msg.msgType == CustomMsgType.Send_SetTurnIdx)
         {
@@ -90,6 +94,15 @@ public class NManager : NetworkManager
                 Debug.Log("Setted Other Turn");
             }
             inputComp.TurnChangeEvent(message.targetIdx);
+        }
+        else if (msg.msgType == CustomMsgType.Receive_MultiGameStartBtnEvent)
+        {
+            boardComp.Mode = cgChessBoardScript.BoardMode.PlayerVsPlayer;
+            inputComp.isMultiGame = true;
+        }
+        else if (msg.msgType == CustomMsgType.Receive_SingleGameStartBtnEvent)
+        {
+            boardComp.Mode = cgChessBoardScript.BoardMode.PlayerVsEngine;
         }
     }
 }

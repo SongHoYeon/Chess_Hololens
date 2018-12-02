@@ -29,6 +29,7 @@ public class SpectatorViewNetworkManager : NetworkManager
 
         if (spectatorView.IsHost)
         {
+            Debug.Log("StartHost");
             StartHost();
         }
     }

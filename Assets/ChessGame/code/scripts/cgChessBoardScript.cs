@@ -13,6 +13,8 @@ using System.Diagnostics;
 [System.Serializable]
 public class cgChessBoardScript : MonoBehaviour
 {
+    [SerializeField]
+    private InputManager_S inputComp;
     #region Properties & fields
     /// <summary>
     /// A sound to play whenever a move is made.
@@ -296,12 +298,12 @@ public class cgChessBoardScript : MonoBehaviour
     /// </summary>
     public void placePieces()
     {
-        
+
         //Collect existing pieces, we instantiate new ones if we run out of existing pieces below.
         List<cgChessPieceScript> pieces = new List<cgChessPieceScript>();
         foreach (cgChessPieceScript piece in chessPieceHolder.GetComponentsInChildren<cgChessPieceScript>()) pieces.Add(piece);
 
-        UnityEngine.Debug.Log("Place pieces called. " + pieces.Count + " " + chessPieceHolder.GetComponentsInChildren<cgChessPieceScript>().Length+" "+_abstractBoard.squares.Count);
+        UnityEngine.Debug.Log("Place pieces called. " + pieces.Count + " " + chessPieceHolder.GetComponentsInChildren<cgChessPieceScript>().Length + " " + _abstractBoard.squares.Count);
         for (byte i = 0; i < _abstractBoard.squares.Count; i++)
         {
             if (_abstractBoard.squares[i] != 0)
@@ -333,7 +335,7 @@ public class cgChessBoardScript : MonoBehaviour
             GameObject.DestroyImmediate(piece.gameObject);
         }
         cgChessPieceScript[] allPieces = chessPieceHolder.GetComponentsInChildren<cgChessPieceScript>();
-        foreach(cgChessPieceScript piece in allPieces)
+        foreach (cgChessPieceScript piece in allPieces)
         {
             if (piece.square == null)
                 GameObject.Destroy(piece.gameObject);
@@ -350,23 +352,21 @@ public class cgChessBoardScript : MonoBehaviour
 
     #region Unity messages
     // Use this for initialization
-    void Awake()
+    public void Init()
     {
-        if (startOnLoad)
+        // UnityEngine.Debug.Log("Abstract board: " + this._abstractBoard);
+        // UnityEngine.Debug.Log("board prop: " + this._abstractBoard.boardHeight);
+        foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(_abstractBoard))
         {
-            // UnityEngine.Debug.Log("Abstract board: " + this._abstractBoard);
-            // UnityEngine.Debug.Log("board prop: " + this._abstractBoard.boardHeight);
-            foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(_abstractBoard))
-            {
-                string name = descriptor.Name;
-                object value = descriptor.GetValue(_abstractBoard);
-                Console.WriteLine("{0}={1}", name, value);
-            }
-            this._abstractBoard.findAllMoves();
-            start(this._abstractBoard);
+            string name = descriptor.Name;
+            object value = descriptor.GetValue(_abstractBoard);
+            Console.WriteLine("{0}={1}", name, value);
         }
+        this._abstractBoard.findAllMoves();
+        start(this._abstractBoard);
 
-
+        UnityEngine.Debug.Log("AniPlay");
+        GetComponent<Animator>().SetTrigger("Start");
     }
     // Update is called once per frame
     void Update()
@@ -436,7 +436,7 @@ public class cgChessBoardScript : MonoBehaviour
         {//Perform long castling move.
             List<cgSimpleMove> moves = _abstractBoard.findStrictLegalMoves(_abstractBoard.whiteTurnToMove);
             cgSimpleMove move = null;
-            foreach(cgSimpleMove mv in moves)
+            foreach (cgSimpleMove mv in moves)
             {
                 if (mv is cgCastlingMove)
                 {
@@ -763,14 +763,13 @@ public class cgChessBoardScript : MonoBehaviour
     /// <param name="move">The prefered move.</param>
     private void _engineCallback(List<cgSimpleMove> moves)
     {
-
         if (!playerCanMove)
         {
             cgSimpleMove move = moves[0];
             if (this._abstractBoard.moves.Count < 10 && randomizeEarlyEngineMoves)
             {//We are in the very early game and we should randomize the engine moves early, so we will make a random-ish choice here instad of the prefered choice.
-                //random-ish in the sense, that we will take a random move of one of the moves that are in the better half of all possible moves.
-                
+             //random-ish in the sense, that we will take a random move of one of the moves that are in the better half of all possible moves.
+
                 List<cgSimpleMove> candidates = _findAllMovesNear(moves, 24);
                 UnityEngine.Debug.Log("Candidates: " + candidates.Count);
                 int choice = UnityEngine.Random.Range(0, candidates.Count);
@@ -788,7 +787,8 @@ public class cgChessBoardScript : MonoBehaviour
                 }
             }
 
-
+            if (!inputComp.isMultiGame)
+                inputComp.TurnChangeEvent(0);
         }
     }
 
@@ -796,7 +796,7 @@ public class cgChessBoardScript : MonoBehaviour
     {
         List<cgSimpleMove> candidates = new List<cgSimpleMove>();
         int best = moves[0].val;
-        foreach(cgSimpleMove mv in moves)
+        foreach (cgSimpleMove mv in moves)
         {
             if (Math.Abs(mv.val - best) < spill)
                 candidates.Add(mv);
@@ -997,7 +997,8 @@ public class cgChessBoardScript : MonoBehaviour
         {
             this._makeEngineMoveMulti(board, moveAsWhiteP, callback);
         }
-        else {
+        else
+        {
             this._makeEngineMoveMono(board, moveAsWhiteP, callback);
         }
     }
@@ -1007,7 +1008,8 @@ public class cgChessBoardScript : MonoBehaviour
     /// <param name="board">The current board state.</param>
     /// <param name="moveAsWhiteP">Move as white(true) or black(false).</param>
     /// <param name="callback">Where the prefered move will be returned.</param>
-    private void _makeEngineMoveMulti(cgBoard board, bool moveAsWhiteP, Action<List<cgSimpleMove>> callback) {
+    private void _makeEngineMoveMulti(cgBoard board, bool moveAsWhiteP, Action<List<cgSimpleMove>> callback)
+    {
         if (_engineThread != null)
         {
             _engineThread.CancelAsync();
@@ -1076,7 +1078,8 @@ public class cgChessBoardScript : MonoBehaviour
         _engine.makeMoveMono(this._startCoroutine, board, moveAsWhiteP, completeCallback, progessCallback);
 
     }
-    private void _startCoroutine(IEnumerator ienum) {
+    private void _startCoroutine(IEnumerator ienum)
+    {
         StartCoroutine(ienum);
     }
     private void OnApplicationQuit()

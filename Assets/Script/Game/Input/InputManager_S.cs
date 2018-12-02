@@ -26,6 +26,7 @@ public class InputManager_S : MonoBehaviour
 
 
     public bool isGameStart = false;
+    public bool isMultiGame = false;
 
     private bool isSelectLegalBlock = false;
     private List<cgSquareScript> highlightSqureList;
@@ -34,6 +35,7 @@ public class InputManager_S : MonoBehaviour
     private void Awake()
     {
         isGameStart = false;
+        isMultiGame = false;
         isSelectLegalBlock = false;
 
         currentPiecesList = new List<cgChessPieceScript>();
@@ -107,18 +109,25 @@ public class InputManager_S : MonoBehaviour
                 highlightSqureIdx--;
                 if (highlightSqureIdx < 0)
                     highlightSqureIdx = highlightSqureList.Count - 1;
+                TargettingEffect(highlightSqureList[highlightSqureIdx]);
             }
             else if (inputCode == 1)//Right
             {
                 highlightSqureIdx++;
                 if (highlightSqureIdx > highlightSqureList.Count - 1)
                     highlightSqureIdx = 0;
+                TargettingEffect(highlightSqureList[highlightSqureIdx]);
             }
             else if (inputCode == 2)//confirm
             {
                 boardComp._pieceUp(currentPiecesList[selectPieceIdx], highlightSqureList[highlightSqureIdx], () => {
-                    //if (currentTurnLensIdx == lensIdx)
+                    if (isMultiGame && currentTurnLensIdx == lensIdx)
                         nMngComp.serverConnection.Send(CustomMsgType.Send_TurnEnd, new UnityEngine.Networking.NetworkSystem.EmptyMessage());
+                    if (!isMultiGame)
+                    {
+                        if (currentCursor != null)
+                            DestroyImmediate(currentCursor);
+                    }
                 });
             }
             else if (inputCode == 3)//cancel
@@ -131,7 +140,6 @@ public class InputManager_S : MonoBehaviour
                 }
                 isSelectLegalBlock = false;
             }
-            TargettingEffect(highlightSqureList[highlightSqureIdx]);
         }
     }
 
