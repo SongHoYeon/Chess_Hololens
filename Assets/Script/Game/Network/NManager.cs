@@ -28,6 +28,7 @@ public class NManager : NetworkManager
         client.RegisterHandler(CustomMsgType.Send_SetTurnIdx, OnCustomMsgHandler);
         client.RegisterHandler(CustomMsgType.Receive_MultiGameStartBtnEvent, OnCustomMsgHandler);
         client.RegisterHandler(CustomMsgType.Receive_SingleGameStartBtnEvent, OnCustomMsgHandler);
+        client.RegisterHandler(CustomMsgType.Send_ReturnToMain, OnCustomMsgHandler);
     }
 
     public override void OnClientConnect(NetworkConnection conn)
@@ -76,7 +77,6 @@ public class NManager : NetworkManager
         }
         else if (msg.msgType == CustomMsgType.Send_GameStart)
         {
-            Debug.Log("SendGameStart");
             inputComp.isGameStart = true;
             boardComp.Init();
         }
@@ -103,6 +103,11 @@ public class NManager : NetworkManager
         else if (msg.msgType == CustomMsgType.Receive_SingleGameStartBtnEvent)
         {
             boardComp.Mode = cgChessBoardScript.BoardMode.PlayerVsEngine;
+        }
+        else if (msg.msgType == CustomMsgType.Send_ReturnToMain)
+        {
+            boardComp.ResetBoard();
+            boardComp.GetComponent<Animator>().SetTrigger("BackStart");
         }
     }
 }

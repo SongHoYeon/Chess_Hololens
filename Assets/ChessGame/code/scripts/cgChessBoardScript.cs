@@ -365,7 +365,6 @@ public class cgChessBoardScript : MonoBehaviour
         this._abstractBoard.findAllMoves();
         start(this._abstractBoard);
 
-        UnityEngine.Debug.Log("AniPlay");
         GetComponent<Animator>().SetTrigger("Start");
     }
     // Update is called once per frame

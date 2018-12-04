@@ -14,6 +14,7 @@ public class CustomMsgType  {
     public static short Send_TurnEnd = MsgType.Highest + 7;
     public static short Receive_MultiGameStartBtnEvent = MsgType.Highest + 9;
     public static short Receive_SingleGameStartBtnEvent = MsgType.Highest + 10;
+    public static short Send_ReturnToMain = MsgType.Highest + 11;
 }
 
 namespace UnityEngine.Networking.NetworkSystem

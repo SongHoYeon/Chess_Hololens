@@ -576,7 +576,7 @@ MonoBehaviour:
   m_NetworkPort: 30000
   m_ServerBindToIP: 0
   m_ServerBindAddress: 
-  m_NetworkAddress: localhost
+  m_NetworkAddress: 10.70.12.55
   m_DontDestroyOnLoad: 1
   m_RunInBackground: 1
   m_ScriptCRCCheck: 1
@@ -2429,7 +2429,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 204750490}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9af4ac91e9017f34c971bbf5e12948d3, type: 3}
   m_Name: 
@@ -8984,7 +8984,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1113091786
 Transform:
   m_ObjectHideFlags: 0
@@ -9808,7 +9808,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b5cdd7fbfb5e4eaeb300d545eb3a519, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldRoot: {fileID: 0}
+  worldRoot: {fileID: 1421237193}
   hololensMarkerDetector: {fileID: 1615691005}
   numCapturesRequired: 3
   markerCaptureErrorDistance: 0.05
@@ -11093,7 +11093,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &1319539717
 AudioListener:
   m_ObjectHideFlags: 0
@@ -12211,7 +12211,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1468382236}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a3c351bec0a2eb4eac4e904f595388c, type: 3}
   m_Name: 
@@ -12219,14 +12219,14 @@ MonoBehaviour:
   m_NetworkPort: 20000
   m_ServerBindToIP: 0
   m_ServerBindAddress: 
-  m_NetworkAddress: localhost
+  m_NetworkAddress: 10.70.12.55
   m_DontDestroyOnLoad: 1
   m_RunInBackground: 1
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
   m_LogLevel: 2
-  m_PlayerPrefab: {fileID: 0}
-  m_AutoCreatePlayer: 0
+  m_PlayerPrefab: {fileID: 1210237135}
+  m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 0
   m_OfflineScene: 
   m_OnlineScene: 

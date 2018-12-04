@@ -139,6 +139,7 @@ public class InputManager_S : MonoBehaviour
                     foreach (cgSquareScript square in boardComp.getSquares()) square.changeColor(square.startColor);
                 }
                 isSelectLegalBlock = false;
+                TargettingEffect(currentPiecesList[selectPieceIdx]);
             }
         }
     }
