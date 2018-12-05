@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor;
+//using UnityEditor;
 
 ////[ExecuteInEditMode]
 public class cgBoardGeneratorScript : MonoBehaviour {
@@ -117,7 +117,7 @@ public class cgBoardGeneratorScript : MonoBehaviour {
             float y = Mathf.Floor(b / boardWidth);
             float x = b - (y * boardWidth);
             bool black = (b + y) % 2 == 0;
-            GameObject newSquare = ((GameObject)PrefabUtility.InstantiatePrefab(black ? blackSquarePrefab : whiteSquarePrefab)); 
+            GameObject newSquare = ((GameObject)Instantiate(black ? blackSquarePrefab : whiteSquarePrefab)); 
             newSquare.transform.SetParent(boardScript.chessSquareHolder.transform);
             y *= squareSpacing.y;
             x *= squareSpacing.x;
@@ -137,7 +137,7 @@ public class cgBoardGeneratorScript : MonoBehaviour {
             if(_piecePlacements[b] != 0)
             {
                 //Create a piece and place it accordingly.
-                cgChessPieceScript piece = ((GameObject) PrefabUtility.InstantiatePrefab(piecePrefab)).GetComponent<cgChessPieceScript>();
+                cgChessPieceScript piece = ((GameObject)Instantiate(piecePrefab)).GetComponent<cgChessPieceScript>();
                 piece.SetType(_piecePlacements[b]);
                 piece.transform.SetParent(boardScript.chessPieceHolder.transform);
             }

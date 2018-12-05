@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
-using System.Threading;
+//using System.Threading;
 using System.ComponentModel;
-using System.Timers;
+//using System.Timers;
 using System.Diagnostics;
 using UnityEngine.Networking;
 /// <summary>
@@ -356,12 +356,12 @@ public class cgChessBoardScript : MonoBehaviour
     {
         // UnityEngine.Debug.Log("Abstract board: " + this._abstractBoard);
         // UnityEngine.Debug.Log("board prop: " + this._abstractBoard.boardHeight);
-        foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(_abstractBoard))
-        {
-            string name = descriptor.Name;
-            object value = descriptor.GetValue(_abstractBoard);
-            Console.WriteLine("{0}={1}", name, value);
-        }
+        //foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(_abstractBoard))
+        //{
+        //    string name = descriptor.Name;
+        //    object value = descriptor.GetValue(_abstractBoard);
+        //    Console.WriteLine("{0}={1}", name, value);
+        //}
         this._abstractBoard.findAllMoves();
         start(this._abstractBoard);
 
