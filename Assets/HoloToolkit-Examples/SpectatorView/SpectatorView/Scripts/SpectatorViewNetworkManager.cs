@@ -11,6 +11,8 @@ using UnityEngine.Networking;
 /// </summary>
 public class SpectatorViewNetworkManager : NetworkManager
 {
+    [SerializeField]
+    private PhotonServer pServer;
     /// <summary>
     /// Component that manages the main flow of spectator view
     /// </summary>
@@ -34,15 +36,9 @@ public class SpectatorViewNetworkManager : NetworkManager
         }
     }
 
-    public override void OnClientSceneChanged(NetworkConnection conn)
+    public override void OnStartServer()
     {
-        base.OnClientSceneChanged(conn);
-        Debug.Log("SceneLoad");
-    }
-
-    public override void OnServerSceneChanged(string sceneName)
-    {
-        base.OnServerSceneChanged(sceneName);
-        Debug.Log("SceneLoad");
+        base.OnStartServer();
+        pServer.Init();
     }
 }

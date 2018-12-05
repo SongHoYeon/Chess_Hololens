@@ -9,8 +9,6 @@ public class PNetObj : Photon.PunBehaviour {
 
     // Lens
     public int myLensIdx;
-    private InputManager_S inputComp;
-    private cgChessBoardScript boardComp;
     public PhotonView serverObj;
     private bool haveController;
 
@@ -23,8 +21,6 @@ public class PNetObj : Photon.PunBehaviour {
         haveController = false;
         myLensIdx = -1;
         serverComp = GameObject.Find("MyNetwork").GetComponent<PhotonServer>();
-        inputComp = GameObject.Find("InputManager").GetComponent<InputManager_S>();
-        boardComp = GameObject.Find("ChessBoard 8x8").GetComponent<cgChessBoardScript>();
         serverObj = GameObject.Find("PNetServer(Clone)").GetComponent<PhotonView>();
 
         serverObj.RPC("ConnectToRoom", PhotonTargets.AllBuffered, photonView.viewID, id, PhotonNetwork.player.ID);
@@ -72,7 +68,7 @@ public class PNetObj : Photon.PunBehaviour {
         Debug.Log("MyIndex is " + idx);
 
         myLensIdx = idx;
-        inputComp.Init(myLensIdx); 
+        serverComp.inputComp.Init(myLensIdx); 
     }
 
     [PunRPC]
@@ -80,15 +76,15 @@ public class PNetObj : Photon.PunBehaviour {
     {
         if (!photonView.isMine)
             return;
-        boardComp.Mode = cgChessBoardScript.BoardMode.PlayerVsPlayer;
-        inputComp.isMultiGame = true;
+        serverComp.boardComp.Mode = cgChessBoardScript.BoardMode.PlayerVsPlayer;
+        serverComp.inputComp.isMultiGame = true;
     }
     [PunRPC]
     public void SingleGameStartBtnEvent()// Server, Lens Only
     {
         if (!photonView.isMine)
             return;
-        boardComp.Mode = cgChessBoardScript.BoardMode.PlayerVsEngine;
+        serverComp.boardComp.Mode = cgChessBoardScript.BoardMode.PlayerVsEngine;
     }
     [PunRPC]
     public void GameStart() //Controller, Lens Only
@@ -96,8 +92,8 @@ public class PNetObj : Photon.PunBehaviour {
         if (!photonView.isMine)
             return;
 
-        inputComp.isGameStart = true;
-        boardComp.Init();
+        serverComp.inputComp.isGameStart = true;
+        serverComp.boardComp.Init();
     }
 
     [PunRPC]
@@ -114,7 +110,7 @@ public class PNetObj : Photon.PunBehaviour {
         {
             Debug.Log("Setted Other Turn");
         }
-        inputComp.TurnChangeEvent(idx);
+        serverComp.inputComp.TurnChangeEvent(idx);
     }
 
     [PunRPC]
@@ -122,7 +118,7 @@ public class PNetObj : Photon.PunBehaviour {
     {
         if (!photonView.isMine)
             return;
-        inputComp.ControlInput(input);
+        serverComp.inputComp.ControlInput(input);
         if (targetIdx == myLensIdx)
         {
             Debug.Log("MyTern - Move Target :  " + targetIdx.ToString() + "  Input : " + input.ToString());
@@ -138,8 +134,8 @@ public class PNetObj : Photon.PunBehaviour {
     {
         if (!photonView.isMine)
             return;
-        boardComp.ResetBoard();
-        boardComp.GetComponent<Animator>().SetTrigger("BackStart");
+        serverComp.boardComp.ResetBoard();
+        serverComp.boardComp.GetComponent<Animator>().SetTrigger("BackStart");
     }
 
 

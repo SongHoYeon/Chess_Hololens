@@ -6,7 +6,7 @@ using System.Linq;
 using HoloToolkit.Unity;
 using UnityEngine.Networking;
 
-public class InputManager_S : MonoBehaviour
+public class InputManager_S : NetworkBehaviour
 {
     [SerializeField]
     private PhotonServer nMngComp;
@@ -79,8 +79,8 @@ public class InputManager_S : MonoBehaviour
 
     public void ControlInput(int inputCode)
     {
-        //if (!isServer)
-            //return;
+        if (!isServer)
+            return;
         if (!isSelectLegalBlock)
         {
             if (inputCode == 0)//Left

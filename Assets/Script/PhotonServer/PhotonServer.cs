@@ -3,17 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PhotonServer : Photon.PunBehaviour {
+public class PhotonServer : Photon.PunBehaviour
+{
     [HideInInspector]
     public PNetObj pNetObj;
     [SerializeField]
     private GameObject canvas;
     [SerializeField]
     private Text controllerConnectText;
+    public InputManager_S inputComp;
+    public cgChessBoardScript boardComp;
 
-	void Start () {
+    public void Init()
+    {
+        if (!GameObject.Find("SpectatorView").GetComponent<HoloToolkit.Unity.Preview.SpectatorView.SpectatorView>().IsHost)
+            return;
         PhotonNetwork.ConnectUsingSettings("v1.0");
-	}
+    }
 
     public void SetControllerConnectUI(bool isConnect)
     {
