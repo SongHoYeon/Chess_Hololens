@@ -6,7 +6,7 @@ using System.Linq;
 using HoloToolkit.Unity;
 using UnityEngine.Networking;
 
-public class InputManager_S : NetworkBehaviour
+public class InputManager_S : MonoBehaviour
 {
     [SerializeField]
     private PhotonServer nMngComp;
@@ -53,25 +53,25 @@ public class InputManager_S : NetworkBehaviour
         this.currentTurnLensIdx = turnLensIdx;
         if (currentCursor != null)
         {
-            Network.Destroy(currentCursor);
-            //DestroyImmediate(currentCursor);
+            //Network.Destroy(currentCursor);
+            DestroyImmediate(currentCursor);
         }
 
         SetPieces();
 
         selectPieceIdx = 0;
 
-        if (!isServer)
-            return;
+        //if (!isServer)
+        //    return
         if (turnLensIdx == 0)
         {
-            currentCursor =  Network.Instantiate(player1SelectCursorObj, Vector3.zero, Quaternion.identity, 0) as GameObject;
-            //currentCursor = Instantiate(player1SelectCursorObj);
+            //currentCursor =  Network.Instantiate(player1SelectCursorObj, Vector3.zero, Quaternion.identity, 0) as GameObject;
+            currentCursor = Instantiate(player1SelectCursorObj);
         }
         else
         {
-            currentCursor = Network.Instantiate(player1SelectCursorObj, Vector3.zero, Quaternion.identity, 0) as GameObject;
-            //currentCursor = Instantiate(player2SelectCursorObj);
+            //currentCursor = Network.Instantiate(player1SelectCursorObj, Vector3.zero, Quaternion.identity, 0) as GameObject;
+            currentCursor = Instantiate(player2SelectCursorObj);
         }
 
         TargettingEffect(currentPiecesList[selectPieceIdx]);
@@ -79,8 +79,8 @@ public class InputManager_S : NetworkBehaviour
 
     public void ControlInput(int inputCode)
     {
-        if (!isServer)
-            return;
+        //if (!isServer)
+            //return;
         if (!isSelectLegalBlock)
         {
             if (inputCode == 0)//Left
@@ -155,7 +155,7 @@ public class InputManager_S : NetworkBehaviour
         }
     }
 
-    public void SetPieces()
+    public void SetPieces(bool isDeadCall = false)
     {
         currentPiecesList.Clear();
         for (int i = 0; i < boardComp._livePieces.Count; i++)
@@ -171,6 +171,22 @@ public class InputManager_S : NetworkBehaviour
                     currentPiecesList.Add(boardComp._livePieces[i]);
             }
         }
+
+        if (!isDeadCall)
+            return;
+        if (currentCursor != null)
+        {
+            DestroyImmediate(currentCursor);
+        }
+
+        selectPieceIdx = 0;
+
+        if (currentTurnLensIdx == 0)
+            currentCursor = Instantiate(player1SelectCursorObj);
+        else
+            currentCursor = Instantiate(player2SelectCursorObj);
+
+        TargettingEffect(currentPiecesList[selectPieceIdx]);
     }
 
     private void TargettingEffect(cgChessPieceScript target)

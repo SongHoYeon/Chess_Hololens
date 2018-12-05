@@ -12,18 +12,22 @@ public class PNetObj : Photon.PunBehaviour {
     private InputManager_S inputComp;
     private cgChessBoardScript boardComp;
     public PhotonView serverObj;
+    private bool haveController;
+
+    private PhotonServer serverComp;
 
     private void Start()
     {
         if (!photonView.isMine)
             return;
-        if (!GameObject.Find("SpectatorView").GetComponent<HoloToolkit.Unity.Preview.SpectatorView.SpectatorView>().IsHost)
-            return;
+        haveController = false;
+        myLensIdx = -1;
+        serverComp = GameObject.Find("MyNetwork").GetComponent<PhotonServer>();
         inputComp = GameObject.Find("InputManager").GetComponent<InputManager_S>();
         boardComp = GameObject.Find("ChessBoard 8x8").GetComponent<cgChessBoardScript>();
         serverObj = GameObject.Find("PNetServer(Clone)").GetComponent<PhotonView>();
 
-        serverObj.RPC("ConnectToRoom", PhotonTargets.AllBuffered, photonView.viewID, 1, PhotonNetwork.player.ID);
+        serverObj.RPC("ConnectToRoom", PhotonTargets.AllBuffered, photonView.viewID, id, PhotonNetwork.player.ID);
     }
 
     public void TurnEndSend()
@@ -36,6 +40,28 @@ public class PNetObj : Photon.PunBehaviour {
     {
         if (!photonView.isMine)
             return;
+    }
+    [PunRPC]
+    public void ControllerConnect(int actorId, int targetIdx)
+    {
+        if (!photonView.isMine)
+            return;
+
+        if (myLensIdx == targetIdx)
+        {
+            haveController = true;
+        }
+    }
+
+    [PunRPC]
+    public void ControllerDisConnect(int beforeTargetIdx)
+    {
+        if (!photonView.isMine)
+            return;
+        if (myLensIdx == beforeTargetIdx)
+        {
+            haveController = false;
+        }
     }
 
     [PunRPC]
@@ -124,5 +150,15 @@ public class PNetObj : Photon.PunBehaviour {
     [PunRPC]
     public void TurnEnd()//Server Only
     {
+    }
+
+    private void Update()
+    {
+        if (!photonView.isMine)
+            return;
+        if (myLensIdx == -1)
+            return;
+        if (serverComp != null)
+            serverComp.SetControllerConnectUI(haveController);
     }
 }

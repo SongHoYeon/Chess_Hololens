@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 /// <summary>
 /// The square script should be attached to a gameobject, there should be 64, they should be placed and named according to where on the board theyre located
 /// </summary>
-public class cgSquareScript : NetworkBehaviour
+public class cgSquareScript : MonoBehaviour
 {
     /// <summary>
     /// The unique name is used to extensively to place pieces on their correct square, the name should always be marked correctly.
@@ -17,7 +17,8 @@ public class cgSquareScript : NetworkBehaviour
     public Color startColor;
     public Color recentMoveColor = Color.red;
     public Color legalMoveToColor = Color.magenta;
-    [SyncVar] private Color myColor;
+    //[SyncVar]
+    private Color myColor;
 
     // Use this for initialization
     void Awake()
@@ -52,13 +53,13 @@ public class cgSquareScript : NetworkBehaviour
     }
     IEnumerator highlighterTimer(Color hightlightColor)
     {
-        if (isServer)
+        //if (isServer)
         {
             myColor = hightlightColor;
         }
         GetComponent<SpriteRenderer>().color = myColor;
         yield return new WaitForSeconds(5f);
-        if (isServer)
+       // if (isServer)
         {
             myColor = startColor;
         }
@@ -71,7 +72,7 @@ public class cgSquareScript : NetworkBehaviour
     /// <param name="color"></param>
     public void changeColor(Color color)
     {
-        if (isServer)
+       // if (isServer)
         {
             myColor = color;
         }

@@ -11,7 +11,7 @@ using UnityEngine.Networking;
 /// The script attached to the chessboard prefab, should have gameobjects with squarescripts, this class: verifies if the player can drag and drop pieces, handles whether or not the engine should make move, checks whether or not the game is over(and if so shows the game over prefab), flips the board, resets the board etc.
 /// </summary>
 [System.Serializable]
-public class cgChessBoardScript : NetworkBehaviour
+public class cgChessBoardScript : MonoBehaviour
 {
     [SerializeField]
     private InputManager_S inputComp;
@@ -403,7 +403,7 @@ public class cgChessBoardScript : NetworkBehaviour
             if (_livePieces.Contains(_deadPieces[i - 1]))
             {
                 _livePieces.Remove(_deadPieces[i - 1]);
-                inputComp.SetPieces();
+                inputComp.SetPieces(true);
             }
         }
         if (_downPiece != null)

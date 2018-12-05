@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 /// <summary>
 /// This script controls the piece on the board, it alters graphics according to promotions/reverts and registers mouse down and mouse up events for dragging purposes
 /// </summary>
-public class cgChessPieceScript : NetworkBehaviour
+public class cgChessPieceScript : MonoBehaviour
 {
     /// <summary>
     /// Is this piece white?
