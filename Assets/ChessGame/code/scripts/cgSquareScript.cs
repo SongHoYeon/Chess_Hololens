@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 //using UnityEngine.UI;
 //using UnityEngine.UI;
 
 /// <summary>
 /// The square script should be attached to a gameobject, there should be 64, they should be placed and named according to where on the board theyre located
 /// </summary>
-public class cgSquareScript : MonoBehaviour
+public class cgSquareScript : NetworkBehaviour
 {
     /// <summary>
     /// The unique name is used to extensively to place pieces on their correct square, the name should always be marked correctly.
@@ -16,11 +17,13 @@ public class cgSquareScript : MonoBehaviour
     public Color startColor;
     public Color recentMoveColor = Color.red;
     public Color legalMoveToColor = Color.magenta;
+    [SyncVar] private Color myColor;
 
     // Use this for initialization
     void Awake()
     {
         startColor = GetComponent<SpriteRenderer>().color;
+        myColor = startColor;
     }
 
     /// <summary>
@@ -49,9 +52,17 @@ public class cgSquareScript : MonoBehaviour
     }
     IEnumerator highlighterTimer(Color hightlightColor)
     {
-        GetComponent<SpriteRenderer>().color = hightlightColor;
+        if (isServer)
+        {
+            myColor = hightlightColor;
+        }
+        GetComponent<SpriteRenderer>().color = myColor;
         yield return new WaitForSeconds(5f);
-        GetComponent<SpriteRenderer>().color = startColor;
+        if (isServer)
+        {
+            myColor = startColor;
+        }
+        GetComponent<SpriteRenderer>().color = myColor;
     }
 
     /// <summary>
@@ -60,6 +71,10 @@ public class cgSquareScript : MonoBehaviour
     /// <param name="color"></param>
     public void changeColor(Color color)
     {
-        GetComponent<SpriteRenderer>().color = color;
+        if (isServer)
+        {
+            myColor = color;
+        }
+        GetComponent<SpriteRenderer>().color = myColor;
     }
 }

@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.Networking;
 /// <summary>
 /// This script controls the piece on the board, it alters graphics according to promotions/reverts and registers mouse down and mouse up events for dragging purposes
 /// </summary>
-public class cgChessPieceScript : MonoBehaviour
+public class cgChessPieceScript : NetworkBehaviour
 {
     /// <summary>
     /// Is this piece white?

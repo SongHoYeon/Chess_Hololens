@@ -4,11 +4,12 @@ using UnityEngine;
 using UnityEngine.Windows.Speech;
 using System.Linq;
 using HoloToolkit.Unity;
+using UnityEngine.Networking;
 
-public class InputManager_S : MonoBehaviour
+public class InputManager_S : NetworkBehaviour
 {
     [SerializeField]
-    private NManager nMngComp;
+    private PhotonServer nMngComp;
     [SerializeField]
     private GameObject player1SelectCursorObj;
     [SerializeField]
@@ -51,19 +52,26 @@ public class InputManager_S : MonoBehaviour
         isSelectLegalBlock = false;
         this.currentTurnLensIdx = turnLensIdx;
         if (currentCursor != null)
-            DestroyImmediate(currentCursor);
+        {
+            Network.Destroy(currentCursor);
+            //DestroyImmediate(currentCursor);
+        }
 
         SetPieces();
 
         selectPieceIdx = 0;
 
+        if (!isServer)
+            return;
         if (turnLensIdx == 0)
         {
-            currentCursor = Instantiate(player1SelectCursorObj);
+            currentCursor =  Network.Instantiate(player1SelectCursorObj, Vector3.zero, Quaternion.identity, 0) as GameObject;
+            //currentCursor = Instantiate(player1SelectCursorObj);
         }
         else
         {
-            currentCursor = Instantiate(player2SelectCursorObj);
+            currentCursor = Network.Instantiate(player1SelectCursorObj, Vector3.zero, Quaternion.identity, 0) as GameObject;
+            //currentCursor = Instantiate(player2SelectCursorObj);
         }
 
         TargettingEffect(currentPiecesList[selectPieceIdx]);
@@ -71,6 +79,8 @@ public class InputManager_S : MonoBehaviour
 
     public void ControlInput(int inputCode)
     {
+        if (!isServer)
+            return;
         if (!isSelectLegalBlock)
         {
             if (inputCode == 0)//Left
@@ -122,7 +132,8 @@ public class InputManager_S : MonoBehaviour
             {
                 boardComp._pieceUp(currentPiecesList[selectPieceIdx], highlightSqureList[highlightSqureIdx], () => {
                     if (isMultiGame && currentTurnLensIdx == lensIdx)
-                        nMngComp.serverConnection.Send(CustomMsgType.Send_TurnEnd, new UnityEngine.Networking.NetworkSystem.EmptyMessage());
+                        nMngComp.pNetObj.TurnEndSend();
+
                     if (!isMultiGame)
                     {
                         if (currentCursor != null)
@@ -144,7 +155,7 @@ public class InputManager_S : MonoBehaviour
         }
     }
 
-    private void SetPieces()
+    public void SetPieces()
     {
         currentPiecesList.Clear();
         for (int i = 0; i < boardComp._livePieces.Count; i++)

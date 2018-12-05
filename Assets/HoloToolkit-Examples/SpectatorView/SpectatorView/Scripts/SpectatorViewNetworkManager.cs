@@ -33,4 +33,16 @@ public class SpectatorViewNetworkManager : NetworkManager
             StartHost();
         }
     }
+
+    public override void OnClientSceneChanged(NetworkConnection conn)
+    {
+        base.OnClientSceneChanged(conn);
+        Debug.Log("SceneLoad");
+    }
+
+    public override void OnServerSceneChanged(string sceneName)
+    {
+        base.OnServerSceneChanged(sceneName);
+        Debug.Log("SceneLoad");
+    }
 }
