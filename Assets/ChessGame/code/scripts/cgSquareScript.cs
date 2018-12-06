@@ -17,14 +17,11 @@ public class cgSquareScript : NetworkBehaviour
     public Color startColor;
     public Color recentMoveColor = Color.red;
     public Color legalMoveToColor = Color.magenta;
-    [SyncVar]
-    private Color myColor;
 
     // Use this for initialization
     void Awake()
     {
         startColor = GetComponent<SpriteRenderer>().color;
-        myColor = startColor;
     }
 
     /// <summary>
@@ -53,17 +50,9 @@ public class cgSquareScript : NetworkBehaviour
     }
     IEnumerator highlighterTimer(Color hightlightColor)
     {
-        if (isServer)
-        {
-            myColor = hightlightColor;
-        }
-        GetComponent<SpriteRenderer>().color = myColor;
+        GetComponent<SpriteRenderer>().color = hightlightColor;
         yield return new WaitForSeconds(5f);
-        if (isServer)
-        {
-            myColor = startColor;
-        }
-        GetComponent<SpriteRenderer>().color = myColor;
+        GetComponent<SpriteRenderer>().color = startColor;
     }
 
     /// <summary>
@@ -72,6 +61,6 @@ public class cgSquareScript : NetworkBehaviour
     /// <param name="color"></param>
     public void changeColor(Color color)
     {
-        GetComponent<SpriteRenderer>().color = myColor;
+        GetComponent<SpriteRenderer>().color = color;
     }
 }

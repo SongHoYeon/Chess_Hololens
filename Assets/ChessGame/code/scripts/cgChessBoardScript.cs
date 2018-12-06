@@ -408,13 +408,13 @@ public class cgChessBoardScript : MonoBehaviour
         }
         if (_downPiece != null)
         {
-            Vector3 cursorPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z);
-            Ray cursorRay = Camera.main.ScreenPointToRay(cursorPoint);
-            RaycastHit hit;
-            if (Physics.Raycast(cursorRay, out hit, 100.0f))
-            {
-                _downPiece.transform.position = hit.point;
-            }
+            //Vector3 cursorPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z);
+            //Ray cursorRay = Camera.main.ScreenPointToRay(cursorPoint);
+            //RaycastHit hit;
+            //if (Physics.Raycast(cursorRay, out hit, 100.0f))
+            //{
+            //    _downPiece.transform.position = hit.point;
+            //}
         }
 
         if (Input.GetKey(KeyCode.C) && Input.GetKeyDown(KeyCode.LeftControl)) _copyGameToClipboard();

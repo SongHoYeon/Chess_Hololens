@@ -14,17 +14,18 @@ public class InputManager_S : NetworkBehaviour
     private GameObject player1SelectCursorObj;
     [SerializeField]
     private GameObject player2SelectCursorObj;
-    private GameObject currentCursor;
 
     [SerializeField]
     private cgChessBoardScript boardComp;
 
     private List<cgChessPieceScript> currentPiecesList;
 
+    private Vector3 CursorDestoryPos;
     private int lensIdx;
     private int currentTurnLensIdx;
-    private int selectPieceIdx;
-
+    public int selectPieceIdx;
+    public Vector3 curserPos;
+    private GameObject currentCursor;
 
     public bool isGameStart = false;
     public bool isMultiGame = false;
@@ -35,6 +36,7 @@ public class InputManager_S : NetworkBehaviour
 
     private void Awake()
     {
+        CursorDestoryPos = new Vector3(-10000f, 0f, 0f);
         isGameStart = false;
         isMultiGame = false;
         isSelectLegalBlock = false;
@@ -51,30 +53,21 @@ public class InputManager_S : NetworkBehaviour
     {
         isSelectLegalBlock = false;
         this.currentTurnLensIdx = turnLensIdx;
+        if (!isServer)
+            return;
         if (currentCursor != null)
-        {
-            //Network.Destroy(currentCursor);
-            DestroyImmediate(currentCursor);
-        }
+            currentCursor.transform.localPosition = CursorDestoryPos;
 
         SetPieces();
 
         selectPieceIdx = 0;
 
-        //if (!isServer)
-        //    return
-        if (turnLensIdx == 0)
-        {
-            //currentCursor =  Network.Instantiate(player1SelectCursorObj, Vector3.zero, Quaternion.identity, 0) as GameObject;
-            currentCursor = Instantiate(player1SelectCursorObj);
-        }
+        if (currentTurnLensIdx == 0)
+            currentCursor = player1SelectCursorObj;
         else
-        {
-            //currentCursor = Network.Instantiate(player1SelectCursorObj, Vector3.zero, Quaternion.identity, 0) as GameObject;
-            currentCursor = Instantiate(player2SelectCursorObj);
-        }
+            currentCursor = player2SelectCursorObj;
 
-        TargettingEffect(currentPiecesList[selectPieceIdx]);
+        TargettingEffect(currentPiecesList[selectPieceIdx].square);
     }
 
     public void ControlInput(int inputCode)
@@ -88,14 +81,14 @@ public class InputManager_S : NetworkBehaviour
                 selectPieceIdx--;
                 if (selectPieceIdx < 0)
                     selectPieceIdx = currentPiecesList.Count - 1;
-                TargettingEffect(currentPiecesList[selectPieceIdx]);
+                TargettingEffect(currentPiecesList[selectPieceIdx].square);
             }
             else if (inputCode == 1)//Right
             {
                 selectPieceIdx++;
                 if (selectPieceIdx > currentPiecesList.Count - 1)
                     selectPieceIdx = 0;
-                TargettingEffect(currentPiecesList[selectPieceIdx]);
+                TargettingEffect(currentPiecesList[selectPieceIdx].square);
             }
             else if (inputCode == 2)//confirm
             {
@@ -137,7 +130,7 @@ public class InputManager_S : NetworkBehaviour
                     if (!isMultiGame)
                     {
                         if (currentCursor != null)
-                            DestroyImmediate(currentCursor);
+                            currentCursor.transform.localPosition = CursorDestoryPos;
                     }
                 });
             }
@@ -150,7 +143,7 @@ public class InputManager_S : NetworkBehaviour
                     foreach (cgSquareScript square in boardComp.getSquares()) square.changeColor(square.startColor);
                 }
                 isSelectLegalBlock = false;
-                TargettingEffect(currentPiecesList[selectPieceIdx]);
+                TargettingEffect(currentPiecesList[selectPieceIdx].square);
             }
         }
     }
@@ -174,100 +167,24 @@ public class InputManager_S : NetworkBehaviour
 
         if (!isDeadCall)
             return;
+        if (!isServer)
+            return;
         if (currentCursor != null)
-        {
-            DestroyImmediate(currentCursor);
-        }
+            currentCursor.transform.localPosition = CursorDestoryPos;
 
         selectPieceIdx = 0;
 
         if (currentTurnLensIdx == 0)
-            currentCursor = Instantiate(player1SelectCursorObj);
+            currentCursor = player1SelectCursorObj;
         else
-            currentCursor = Instantiate(player2SelectCursorObj);
+            currentCursor = player2SelectCursorObj;
 
-        TargettingEffect(currentPiecesList[selectPieceIdx]);
-    }
-
-    private void TargettingEffect(cgChessPieceScript target)
-    {
-        currentCursor.transform.parent = target.transform;
-        currentCursor.transform.localPosition = Vector3.zero + new Vector3(0f, 0f, -1f);
+        TargettingEffect(currentPiecesList[selectPieceIdx].square);
     }
 
     private void TargettingEffect(cgSquareScript target)
     {
-        currentCursor.transform.parent = target.transform;
-        currentCursor.transform.localPosition = Vector3.zero + new Vector3(0f, 0f, -2f);
+        if (isServer)
+            currentCursor.transform.localPosition = target.transform.localPosition + new Vector3(0f, 0f, -0.15f);
     }
-
-    public void CheckMyTurn()
-    {
-        //currentCursor.SetActive(false);
-        //if (GameManager.currentTurnPlayer == CustomMessage.Instance.LocalPlayer)
-        //{
-        //    isMyTurn = true;
-
-        //    currentTargetIdx = 0;
-        //    currentCursor = yourSelectCursor;
-        //    currentCursor.SetActive(true);
-
-        //    currentTurnPieceList.Clear();
-
-        //    List<Piece> tmpList = new List<Piece>();
-
-        //    foreach (Piece piece in PieceManager.myPieces.Values)
-        //        tmpList.Add(piece);
-
-        //    for (int i = 0; i < Defines.BoardProperty.COL_COUNT; i++)
-        //    {
-        //        List<Piece> foundPiece = tmpList.FindAll(x => x.GetPoint().GetXPos() == i && x.GetIsAlive());
-        //        for (int j = 0; j < foundPiece.Count; j++)
-        //            currentTurnPieceList.Add(foundPiece[j]);
-        //    }
-        //    WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nMyTurnCheck. pieceCount : \"{0}\"", currentTurnPieceList.Count.ToString());
-        //    TargettingEffect();
-        //}
-        //else
-        //    isMyTurn = false;
-    }
-
-    //void Update()
-    //{
-    //    if (!GameManager.isGameStart)
-    //        return;
-    //    if (!isMyTurn)
-    //        return;
-
-    //    if (Input.GetKeyDown(KeyCode.LeftArrow) || (globalParameter.LeftThumbstickX <= -1 && !flag1))
-    //    {
-    //        flag1 = true;
-    //        currentTargetIdx--;
-    //        if (currentTargetIdx < 0)
-    //            currentTargetIdx = currentTurnPieceList.Count - 1;
-    //    }
-
-    //    if (Input.GetKeyDown(KeyCode.RightArrow) || (globalParameter.LeftThumbstickX >= 1 && !flag2))
-    //    {
-    //        flag2 = true;
-    //        currentTargetIdx++;
-    //        if (currentTargetIdx > currentTurnPieceList.Count - 1)
-    //            currentTargetIdx = 0;
-    //    }
-    //    if (Input.GetKeyDown(KeyCode.A) || globalParameter.Press_ButttonA == 1)
-    //    {
-    //        BoardPoint currentPoint = currentTurnPieceList[currentTargetIdx].GetPoint();
-    //        WorldAnchorManager.Instance.AnchorDebugText.text += string.Format("\nMoveTargetName : \"{0}\"", currentTurnPieceList[currentTargetIdx].name);
-    //        if (currentPoint.GetYPos() > 0)
-    //        {
-    //            CustomMessage.Instance.SendMoveTarget((int)CustomMessage\.Instance.LocalPlayer, (int)currentTurnPieceList[currentTargetIdx].GetPieceSettingIdx(), currentPoint.GetYPos() - 1, currentPoint.GetXPos());
-    //            currentTurnPieceList[currentTargetIdx].SetMove(PointCreater.pointCompList[currentPoint.GetXPos(), currentPoint.GetYPos() - 1], () =>
-    //            {
-    //                CheckMyTurn();
-    //            });
-    //        }
-    //    }
-
-    //    TargettingEffect();
-    //}
 }
